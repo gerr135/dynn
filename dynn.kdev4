@@ -1,0 +1,4 @@
+[Project]
+Name=dynn
+Manager=KDevCustomMakeManager
+VersionControl=kdevgit
