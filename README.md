@@ -16,6 +16,7 @@ The project is a spiritual successor of the [wann project](https://github.com/ge
  The new "handles" still take the form of integer indices, for ease of passing around and hand-crafting the (initial) NNets, and to have a uniform interface independent of implementation. However, unlike the "real" integer index, there is no requirement of continuity. Thus, e.g. direct for-loops over integer index values are not supported! Use the iterators instead (that support a streamlined interface similar to foreach of other languages, since Ada 2015..).
 
  This library strives to provide a single, unified handling interfacem via the ADTs mentioned above. Specific implementations are possible and (eventually) provided:
+ 
  | Name | Features | Design  | Intended use |
  | ---- | -------- | ------- | ------------ |
  | fixed   | immutable; efficient iteration and direct access | use basic Ada arrays, a-la Strings.Fixed. | final, "evolved" NNet. |
