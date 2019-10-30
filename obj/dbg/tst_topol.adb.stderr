@@ -1,0 +1,5 @@
+tst_topol.adb:14:06: file "nnet_types.ads" not found
+tst_topol.adb:14:06: "tst_topol (body)" depends on "dynn (spec)"
+tst_topol.adb:14:06: "dynn (spec)" depends on "nnet_types (spec)"
+tst_topol.adb:14:06: file "dynn-nets.ads" not found
+tst_topol.adb:15:06: file "dynn-neurons.ads" not found
