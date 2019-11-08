@@ -50,7 +50,7 @@
 -- Use renames to access already instantiated packages!!!
 -- Thus, e.g.:
 --  NN is instantiated right here, at top level, and used throughout
---    (it is visible by anything using top level wann.ads - i.e. everything).
+--    (it is visible by anything using top level dynn.ads - i.e. everything).
 --  PN is instantiated in PL and then PL.PN is renamed to PN where necessary..
 --------------------------------------------------------------------------
 
@@ -72,21 +72,21 @@ package dynn is
     ----------------------------
     -- exceptions
     --
-    Data_Width_Mismatch : Exception;
-    --  trying to pass data of mismatching size between inputs/outputs/next layer
-
-    Unsorted_Net_Propagation : Exception;
-    --  trying to propagate through NNet before creating layers
-
-    Unset_Layer_Generator : Exception;
-    --  trying to use Layer_Generator before it is set in nnet
-
-    Unset_Value_Access : Exception;
-    --  trying to access a not-yet-set (or already cleared) cached value
-
-    Invalid_Connection : Exception;
-    --  trying to make connection that obviously makes no sense
-    --  (connect neuron input to net output, etc..)
+--     Data_Width_Mismatch : Exception;
+--     --  trying to pass data of mismatching size between inputs/outputs/next layer
+--
+--     Unsorted_Net_Propagation : Exception;
+--     --  trying to propagate through NNet before creating layers
+--
+--     Unset_Layer_Generator : Exception;
+--     --  trying to use Layer_Generator before it is set in nnet
+--
+--     Unset_Value_Access : Exception;
+--     --  trying to access a not-yet-set (or already cleared) cached value
+--
+--     Invalid_Connection : Exception;
+--     --  trying to make connection that obviously makes no sense
+--     --  (connect neuron input to net output, etc..)
 
     package NN is new nnet_types(Real);
 
@@ -107,19 +107,19 @@ package dynn is
     type Sort_Direction is (Forward, Backward);
 
 
-    function  Get_Value(SV : NN.State_Vector; idx : NN.ConnectionIndex)
-        return Real with Inline;
-    --
-    procedure Set_Value(SV : in out NN.State_Vector; idx : NN.ConnectionIndex;
-                        value : Real) with Inline;
-    --
-    function Is_Valid(SV : NN.Checked_State_Vector; idx : NN.ConnectionIndex)
-        return Boolean with Inline;
-    --
-    function  Get_Value(SV : NN.Checked_State_Vector; idx : NN.ConnectionIndex)
-        return Real with Inline;
-    --
-    procedure Set_Value(SV : in out NN.Checked_State_Vector; idx : NN.ConnectionIndex;
-                        value : Real) with Inline;
+--     function  Get_Value(SV : NN.State_Vector; idx : NN.ConnectionIndex)
+--         return Real with Inline;
+--     --
+--     procedure Set_Value(SV : in out NN.State_Vector; idx : NN.ConnectionIndex;
+--                         value : Real) with Inline;
+--     --
+--     function Is_Valid(SV : NN.Checked_State_Vector; idx : NN.ConnectionIndex)
+--         return Boolean with Inline;
+--     --
+--     function  Get_Value(SV : NN.Checked_State_Vector; idx : NN.ConnectionIndex)
+--         return Real with Inline;
+--     --
+--     procedure Set_Value(SV : in out NN.Checked_State_Vector; idx : NN.ConnectionIndex;
+--                         value : Real) with Inline;
 
 end dynn;
