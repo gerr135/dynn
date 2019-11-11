@@ -107,6 +107,42 @@ package dynn is
     type Sort_Direction is (Forward, Backward);
 
 
+
+    --------------------------------------------------------------
+    -- global NNet component addressing
+    --   former global index type, under nnet_types
+
+    -- all Id types share functionality, so define a common root type
+    package Component_Id is
+        -- as we are going to derive from it, we need it to be complete at the point
+        -- of derivation - thus a separate package..
+
+        -- Ids are mapping on Integers, numbering from 1, 0 denotes null entry.
+        -- There may be holes (due to deletions), so only equiality and int conversions are provided.
+        --
+        -- Ordering by Nnet topology might makie sense, but that can only done at the NNet level..
+
+        type Id_Type is private;
+        Null_Id : constant Id_Type;
+
+        function "+"(int : Natural) return Id_Type;
+        function int(cId : Id_Type) return Natural;
+        function "="(Left : Integer; Right : Id_Type) return Boolean;
+        function "="(Left : Id_Type; Right : Integer) return Boolean;
+
+    private
+
+        type Id_Type is new Natural;
+        Null_Id : constant Id_Type := 0;
+    end Component_Id;
+
+    -- Now the indices themselves
+    type Nnet_Input_Id  is new Component_Id.Id_Type;
+    type Nnet_Output_Id is new Component_Id.Id_Type;
+    type Nnet_Neuron_Id is new Component_Id.Id_Type;
+    type Nnet_Layer_Id  is new Component_Id.Id_Type;
+
+
 --     function  Get_Value(SV : NN.State_Vector; idx : NN.ConnectionIndex)
 --         return Real with Inline;
 --     --

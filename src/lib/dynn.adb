@@ -60,6 +60,34 @@ package body dynn is
         end case;
     end Set_Value;
 
+
+    ----------------------------------------------------------
+    --  Component_Id_Type bodies
+
+    package body Component_Id is
+
+        function "+"(int : Natural) return Id_Type is
+        begin
+            return Id_Type(int);
+        end;
+
+        function int(cId : Id_Type) return Natural is
+        begin
+            return Integer(cId);
+        end;
+
+        function "="(Left : Integer; Right : Id_Type) return Boolean is
+        begin
+            return Left = Integer(Right);
+        end;
+
+        function "="(Left : Id_Type; Right : Integer) return Boolean is
+        begin
+            return Integer(Left) = Right;
+        end;
+
+    end Component_Id;
+
 begin
     GT.Parse_Config_File;
 end dynn;
