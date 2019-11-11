@@ -72,21 +72,21 @@ package dynn is
     ----------------------------
     -- exceptions
     --
---     Data_Width_Mismatch : Exception;
---     --  trying to pass data of mismatching size between inputs/outputs/next layer
---
---     Unsorted_Net_Propagation : Exception;
---     --  trying to propagate through NNet before creating layers
---
---     Unset_Layer_Generator : Exception;
---     --  trying to use Layer_Generator before it is set in nnet
---
---     Unset_Value_Access : Exception;
---     --  trying to access a not-yet-set (or already cleared) cached value
---
---     Invalid_Connection : Exception;
---     --  trying to make connection that obviously makes no sense
---     --  (connect neuron input to net output, etc..)
+    Data_Width_Mismatch : Exception;
+    --  trying to pass data of mismatching size between inputs/outputs/next layer
+
+    Unsorted_Net_Propagation : Exception;
+    --  trying to propagate through NNet before creating layers
+
+    Unset_Layer_Generator : Exception;
+    --  trying to use Layer_Generator before it is set in nnet
+
+    Unset_Value_Access : Exception;
+    --  trying to access a not-yet-set (or already cleared) cached value
+
+    Invalid_Connection : Exception;
+    --  trying to make connection that obviously makes no sense
+    --  (connect neuron input to net output, etc..)
 
     package NN is new nnet_types(Real);
 
