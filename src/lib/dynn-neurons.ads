@@ -30,8 +30,8 @@ package dynn.neurons is
     subtype OutputIndex is OutputIndex_Base range 1 .. OutputIndex_Base'Last;
 
     -- associated arrray types for holding params
-    type Input_Connection_Array  is array (InputIndex  range <>) of NN.ConnectionIndex;
-    type Output_Connection_Array is array (OutputIndex range <>) of NN.ConnectionIndex;
+    type Input_Connection_Array  is array (InputIndex  range <>) of ConnectionIndex;
+    type Output_Connection_Array is array (OutputIndex range <>) of ConnectionIndex;
     type Weight_Array  is array (InputIndex_Base range <>) of Real;
     type Value_Array   is array (InputIndex range <>) of Real;
 
@@ -45,7 +45,7 @@ package dynn.neurons is
     -- NOTE: outputs are not part of the "base topology", so it might make sense to have
     -- two record types
     type NeuronRec(Ni : InputIndex) is record
-        idx     : NN.NeuronIndex_Base; -- own index in NNet
+        idx     : NNet_NeuronId; -- own index in NNet
         activat : Activation_Type;
         lag     : Real;    -- delay of result propagation, unused for now
         weights : Weight_Array(0 .. Ni);
@@ -64,8 +64,8 @@ package dynn.neurons is
     --
     -- like Input_Interface, is based on Connector_Interface, as output handling code is the same
     package PCN is new Connectors(Index_Base      => OutputIndex_Base,
-                                  Connection_Type => NN.ConnectionIndex,
-                                  No_Connection   => NN.No_Connection );
+                                  Connection_Type => ConnectionIndex,
+                                  No_Connection   => No_Connection );
 
     type Neuron_Interface is interface and PCN.Connector_Interface;
     type NeuronClass_Access is access all Neuron_Interface'Class;
@@ -97,10 +97,11 @@ package dynn.neurons is
     -- primitives giving access to commonnly used fields/methods
     -- Input handling, same interface layout as for Connector_Interface
     function NInputs (neur : Neuron_Interface) return InputIndex  is abstract;
-    function Input (neur : Neuron_Interface; idx : InputIndex)  return NN.ConnectionIndex is abstract;
+    function Input (neur : Neuron_Interface; idx : InputIndex)  return ConnectionIndex is abstract;
+    function Input (neur : Neuron_Interface; id  : Nnet_InputId)  return ConnectionIndex is abstract;
     --
-    procedure Add_Input(neur : in out Neuron_Interface; Input : NN.ConnectionIndex) is abstract;
-    procedure Del_Input(neur : in out Neuron_Interface; Input : NN.ConnectionIndex) is abstract;
+    procedure Add_Input(neur : in out Neuron_Interface; Input : ConnectionIndex) is abstract;
+    procedure Del_Input(neur : in out Neuron_Interface; Input : ConnectionIndex) is abstract;
     --
     -- Outputs are inherited from connectors
 
@@ -126,13 +127,13 @@ package dynn.neurons is
     -- the entire Rec:
     function  ToRec  (NI : Neuron_Interface'Class) return NeuronRec;
     -- and individual fields:
-    function Index  (NI : Neuron_Interface'Class) return NN.NeuronIndex with Inline;
+    function Index  (NI : Neuron_Interface'Class) return NNet_NeuronId with Inline;
     function Activation(NI : Neuron_Interface'Class) return Activation_Type with Inline;
     function Weights(NI : Neuron_Interface'Class) return Weight_Array with Inline;
     function Inputs (NI : Neuron_Interface'Class) return Input_Connection_Array  with Inline;
     function Outputs(NI : Neuron_Interface'Class) return Output_Connection_Array with Inline;
 
-    procedure Set_Index  (NI : in out Neuron_Interface'Class; idx : NN.NeuronIndex);
+    procedure Set_Index  (NI : in out Neuron_Interface'Class; idx : NNet_NeuronId);
     procedure Set_Activation(NI : in out Neuron_Interface'Class; activat : Activation_Type);
     procedure Set_Weights(NI : in out Neuron_Interface'Class; weights : Weight_Array);
     procedure Set_Inputs (NI : in out Neuron_Interface'Class; inputs  : Input_Connection_Array);
@@ -151,24 +152,24 @@ package dynn.neurons is
     --  and pass those to basic calculators
     --
     -- stateless
-    function  Prop_Forward(neur : Neuron_Interface'Class; inputs : NN.State_Vector)
-        return NN.State_Vector;
-    function  Prop_Forward(neur : Neuron_Interface'Class; inputs : NN.Checked_State_Vector)
-        return NN.Checked_State_Vector;
+--     function  Prop_Forward(neur : Neuron_Interface'Class; inputs : NN.State_Vector)
+--         return NN.State_Vector;
+--     function  Prop_Forward(neur : Neuron_Interface'Class; inputs : NN.Checked_State_Vector)
+--         return NN.Checked_State_Vector;
     --
     -- procedural form (avoids recreating State_Vector all the time)
-    procedure Prop_Forward(neur : Neuron_Interface'Class; SV : in out NN.State_Vector);
-    procedure Prop_Forward(neur : Neuron_Interface'Class; SV : in out NN.Checked_State_Vector);
-    -- stateful
-    procedure Prop_Forward (neur : in out Stateful_Neuron_Interface'Class);
-    procedure Prop_Backward(neur : in out Stateful_Neuron_Interface'Class);
+--     procedure Prop_Forward(neur : Neuron_Interface'Class; SV : in out NN.State_Vector);
+--     procedure Prop_Forward(neur : Neuron_Interface'Class; SV : in out NN.Checked_State_Vector);
+--     -- stateful
+--     procedure Prop_Forward (neur : in out Stateful_Neuron_Interface'Class);
+--     procedure Prop_Backward(neur : in out Stateful_Neuron_Interface'Class);
 
 private
 
     type Neuron_Reference (Data : not null access Neuron_Interface'Class) is null record;
 
     type NeuronRepr(Ni : InputIndex_Base; No : OutputIndex_Base) is record
-        idx     : NN.NeuronIndex_Base; -- own index in NNet
+        idx     : NNet_NeuronId; -- own index in NNet
         activat : Activation_Type;
         lag     : Real;    -- delay of result propagation, unused for now
         weights : Weight_Array(0 .. Ni);

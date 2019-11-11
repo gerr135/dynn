@@ -88,7 +88,7 @@ package dynn is
     --  trying to make connection that obviously makes no sense
     --  (connect neuron input to net output, etc..)
 
-    package NN is new nnet_types(Real);
+--     package NN is new nnet_types(Real);
 
     ------------------------------------------------------------
     -- Some common types; basic and not requiring special naming
@@ -137,10 +137,33 @@ package dynn is
     end Component_Id;
 
     -- Now the indices themselves
-    type Nnet_Input_Id  is new Component_Id.Id_Type;
-    type Nnet_Output_Id is new Component_Id.Id_Type;
-    type Nnet_Neuron_Id is new Component_Id.Id_Type;
-    type Nnet_Layer_Id  is new Component_Id.Id_Type;
+    type NNet_InputId  is new Component_Id.Id_Type;
+    type NNet_OutputId is new Component_Id.Id_Type;
+    type NNet_NeuronId is new Component_Id.Id_Type;
+    type NNet_LayerId  is new Component_Id.Id_Type;
+
+
+    --------------------------------------------------
+    -- Topology
+    -- Types for keeping/passing around connection info
+    --
+    -- The neuron inter-connection type
+    type Connection_Type is (I, O, N, None);
+    -- Input, Output, Neuron, but intended to be used in constructs throughout, so shortening down
+    --
+    type ConnectionIndex(T : Connection_Type := None) is record
+        case T is
+            when None => Null;
+            when I => Iidx : NNet_InputId;
+            when N => Nidx : NNet_NeuronId;
+            when O => Oidx : NNet_OutputId;
+        end case;
+    end record;
+
+    No_Connection : constant ConnectionIndex := (T => None);
+
+    function Con2Str(connection : ConnectionIndex) return String;
+
 
 
 --     function  Get_Value(SV : NN.State_Vector; idx : NN.ConnectionIndex)

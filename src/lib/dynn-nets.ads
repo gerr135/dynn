@@ -33,11 +33,24 @@ package dynn.nets is
     package PN renames PL.PN;
     --package PN is new dynn.neurons; -- creates new package with new incompatible types
 
+
+    -------------------------------------------------------------------
+    --  Local indices - for actual continuous arrays/vectors of entries
+    type    InputIndex_Base is new Natural;
+    subtype InputIndex  is InputIndex_Base  range 1 .. InputIndex_Base'Last;
+    type    OutputIndex_Base is new Natural;
+    subtype OutputIndex is OutputIndex_Base range 1 .. OutputIndex_Base'Last;
+    type    NeuronIndex_Base is new Natural;
+    subtype NeuronIndex is NeuronIndex_Base range 1 .. NeuronIndex_Base'Last;
+    type    LayerIndex_Base is new Natural;
+    subtype LayerIndex  is LayerIndex_Base  range 1 .. LayerIndex_Base'Last;
+
+
     -- similar to Neuron_Interface, NNet_Interface uses same method signature for Outputs
     -- this package encapsulates the common interface, specific by index
-    package PCN is new Connectors(Index_Base      => NN.OutputIndex_Base,
-                                  Connection_Type => NN.ConnectionIndex,
-                                  No_Connection   => NN.No_Connection );
+    package PCN is new Connectors(Index_Base      => OutputIndex_Base,
+                                  Connection_Type => ConnectionIndex,
+                                  No_Connection   => No_Connection );
 
 
     -- NOTE 1: NNet indices are defined at the library level, in the nnet_types package,
@@ -67,13 +80,13 @@ package dynn.nets is
 
     -- Dimension getters; the setters are imnplementation-specific,
     not overriding
-    function NInputs (net : NNet_Interface) return NN.InputIndex_Base  is abstract;
+    function NInputs (net : NNet_Interface) return InputIndex_Base  is abstract;
     overriding  -- from Connectors
-    function NOutputs(net : NNet_Interface) return NN.OutputIndex_Base is abstract;
+    function NOutputs(net : NNet_Interface) return OutputIndex_Base is abstract;
     not overriding
-    function NNeurons(net : NNet_Interface) return NN.NeuronIndex is abstract;
+    function NNeurons(net : NNet_Interface) return NeuronIndex is abstract;
     not overriding
-    function NLayers (net : NNet_Interface) return NN.LayerIndex  is abstract;
+    function NLayers (net : NNet_Interface) return LayerIndex  is abstract;
 
     -- net IO
     -- These would be inefficient in dynamic implementations (have to copy entire array to access one element)
@@ -82,11 +95,19 @@ package dynn.nets is
     --function  Output_Connections(net : NNet_Interface) return NN.Output_Connection_Array is abstract;
     --
     -- So we access by element instead
-    not overriding
-    function  Input (net : NNet_Interface; i : NN.InputIndex)  return PI.Input_Interface'Class is abstract;
+    -- by internal indices
+--     not overriding
+    function  Input (net : NNet_Interface; i : InputIndex)  return PI.Input_Interface'Class is abstract;
     --     function  Input (net : NNet_Interface'Class; i : NN.InputIndex)  return PI.InputRec;
-    overriding
-    function  Output(net : NNet_Interface; o : NN.OutputIndex) return NN.ConnectionIndex is abstract; -- from Connectors
+--     overriding
+    function  Output(net : NNet_Interface; o : OutputIndex) return ConnectionIndex is abstract; -- from Connectors
+    --
+    -- by glocal IDs - NOTE: these might be made class-wide..
+    not overriding
+    function  Input (net : NNet_Interface; i : NNet_InputId)  return PI.Input_Interface'Class is abstract;
+    --     function  Input (net : NNet_Interface'Class; i : NN.InputIndex)  return PI.InputRec;
+    not overriding
+    function  Output(net : NNet_Interface; o : NNet_OutputId) return ConnectionIndex is abstract; -- from Connectors
 
     --  Neuron handling
     -- NNet is conceptually a container. So we store/remove neurons with Add/Del_Neuron.
@@ -95,17 +116,18 @@ package dynn.nets is
     --
     procedure Add_Neuron(net  : in out NNet_Interface;
                          neur : in out PN.Neuron_Interface'Class; -- pass pre-created Neuron
-                         idx : out NN.NeuronIndex) is abstract;
+                         idx : out NNet_NeuronId) is abstract;
         -- adds pre-created neuron, return in idx new assigned NN.NeuronIndex
         -- and updates connections (outputs) of other net entities (other neurons, inputs, etc..)
         -- also should invalidate Layers_sorted or call sorting if autosort is set..
 
-    procedure Del_Neuron(net : in out NNet_Interface; idx : NN.NeuronIndex) is null;
+    procedure Del_Neuron(net : in out NNet_Interface; idx : NNet_NeuronId) is null;
         -- remove neuron from NNet_Interface,
         -- as with Add, should update connections of affected entities and reset Layers_Sorted or autosort
 
     -- neuron accessor
-    function  Neuron(net : aliased in out NNet_Interface; idx : NN.NeuronIndex) return PN.Neuron_Reference is abstract;
+    function  Neuron(net : aliased in out NNet_Interface; idx : NeuronIndex)   return PN.Neuron_Reference is abstract;
+    function  Neuron(net : aliased in out NNet_Interface; idx : NNet_NeuronId) return PN.Neuron_Reference is abstract;
         -- this provides read-write access via Accessor trick
     --function  Neuron(net : NNet_Interface; idx : NN.NeuronIndex) return PN.Neuron_Interface'Class is abstract;
         -- this provides read-only access, passing by reference (tagged record)

@@ -34,13 +34,13 @@ package dynn.inputs is
     subtype OutputIndex is OutputIndex_Base range 1 .. OutputIndex_Base'Last;
 
     -- associated arrray types for holding params
-    type Output_Connection_Array is array (OutputIndex range <>) of NN.ConnectionIndex;
+    type Output_Connection_Array is array (OutputIndex range <>) of ConnectionIndex;
 
 
     -------------------------------------------------
     -- Input representation
     type InputRec(No : OutputIndex) is record
-        idx     : NN.InputIndex_Base; -- own index in NNet
+        idx     : Nnet_InputId; -- own index in NNet
         outputs : Output_Connection_Array (1 .. No);
     end record;
 
@@ -52,8 +52,8 @@ package dynn.inputs is
     --
     -- this is basically the Connector_Interface with a specific Index type
     package PCI  is new Connectors(Index_Base      => OutputIndex_Base,
-                                   Connection_Type => NN.ConnectionIndex,
-                                   No_Connection   => NN.No_Connection );
+                                   Connection_Type => ConnectionIndex,
+                                   No_Connection   => No_Connection );
 
     type Input_Interface is interface and PCI.Connector_Interface;
 
@@ -67,7 +67,7 @@ package dynn.inputs is
 private
 
     type Input_Vector is new PCIV.Connector_Vector and Input_Interface with record
-        idx     : NN.InputIndex_Base;
+        idx     : Nnet_InputId;
     end record;
 
 end dynn.inputs;

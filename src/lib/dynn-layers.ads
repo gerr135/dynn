@@ -34,8 +34,8 @@ package dynn.layers is
     subtype NeuronIndex is NeuronIndex_Base range 1 .. NeuronIndex_Base'Last;
 
     -- associated arrray types for holding params
-    type Input_Connection_Array  is array (InputIndex range <>)  of NN.ConnectionIndex;
-    type Output_Connection_Array is array (OutputIndex range <>) of NN.ConnectionIndex;
+    type Input_Connection_Array  is array (InputIndex range <>)  of ConnectionIndex;
+    type Output_Connection_Array is array (OutputIndex range <>) of ConnectionIndex;
     type Neuron_Array is array (NeuronIndex range <>) of PN.NeuronClass_Access;
 
 
@@ -100,7 +100,7 @@ package dynn.layers is
     function  Neuron(LI : Layer_Interface; idx : NeuronIndex) return PN.NeuronClass_Access is abstract;
     --     procedure Reset_Neuron(LI : Layer_Interface; idx : NeuronIndex; np : PN.Neuron_Access) is abstract;
 
-    procedure Add_Neuron(LI : in out Layer_Interface; Nidx : NN.NeuronIndex) is abstract;
+    procedure Add_Neuron(LI : in out Layer_Interface; Nidx : NNet_NeuronId) is abstract;
     -- adds neuron to layer by index. Ignores duplicates (so that each neuron is added only once)
     -- NOTE: layers are supposed to only hold neurons, no outputs, so enforcing proper idx type.
     --  prop logic needsrethuinking here - what happens with pass-through connections?
