@@ -38,21 +38,33 @@ package nnet_types is
     -- Connections are tracked by (ConnectionType, index) record, to discriminate between
     -- inputs, outputs and other neurons.
     --
-    -- Neurons are organized into layers. Can be added arbitrarely and sorted later.
-    -- Sort is "automatic" by invoking a corresponding method that performs topological sort.
-    -- All entities are defined in corresponding child modules and are indexed by corresponding indices.
+    -- Similarly to NNet, Neurons, Inputs, Layers, etc all have inputs/outputs (possibly
+    -- only 1) and internal entries. All these are indexed by their own indices, defined
+    -- locally in corresponding modules.
     -- Thus in each module we are going to have InputIndex, OutputIndex and SomeentryIndex.
     -- Use the module.Index notation to discriminate, this gives automatic dereference and readability.
-    -- Here, at top level we define "global" - visible by all indices,
-    -- denoting global (nnet) inputs, outputs, neurons, layers, etc..
+    --
+    -- Here, at top level, we define "global" indices, used as label/handles by
+    -- all NNet component. So these would be NNet global inputs, outputs, enurons and layers..
+    -- These indices are defined here, in a separtate library-level module, (rather than
+    -- in dynn.ads - the top-level module) in order to:
+    -- 1. keep the consistent naming scheme (prefixed by module handle)
+    -- 2. provide basic protection against unintended name overloading.
+    --    (still, watch out for the use clauses! Much better to "use type" instead..)
     --
     -- NOTE on type naming:
     -- unlike most other types/identifiers, the Index types are written run-in,
     -- i.e. without the '_' between type qualifier and Index.
     -- This is to easily distinguish the _Base variant (and other preffixes/suffixes, should such appear).
     --
-    -- NOTE: All entities are numbered from 1 upwards. For each index type we define _base,
+    -- NOTE 2: All entities are numbered from 1 upwards. For each index type we define _base,
     -- counting from 0, and subtype xxIndex itself, counting from 1.
+    --
+    -- NOTE 3:
+    -- To support efficient deletions, these indices are treated as handles, rater than
+    -- continuous indices. Thus:
+    -- 1. Each index value denotes a unique entity
+    -- 2. Presence of a particular value should not be assumed! There may be holes!
 
     type    InputIndex_Base  is new Natural;
     subtype InputIndex  is InputIndex_Base  range 1 .. InputIndex_Base'Last;
