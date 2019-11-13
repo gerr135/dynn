@@ -34,21 +34,24 @@ package dynn.nets is
     --package PN is new dynn.neurons; -- creates new package with new incompatible types
 
 
-    -------------------------------------------------------------------
-    --  Local indices - for actual continuous arrays/vectors of entries
-    type    InputIndex_Base is new Natural;
-    subtype InputIndex  is InputIndex_Base  range 1 .. InputIndex_Base'Last;
-    type    OutputIndex_Base is new Natural;
-    subtype OutputIndex is OutputIndex_Base range 1 .. OutputIndex_Base'Last;
-    type    NeuronIndex_Base is new Natural;
-    subtype NeuronIndex is NeuronIndex_Base range 1 .. NeuronIndex_Base'Last;
+--     -------------------------------------------------------------------
+--     --  Local indices - for actual continuous arrays/vectors of entries
+--     type    InputIndex_Base is new Natural;
+--     subtype InputIndex  is InputIndex_Base  range 1 .. InputIndex_Base'Last;
+--     type    OutputIndex_Base is new Natural;
+--     subtype OutputIndex is OutputIndex_Base range 1 .. OutputIndex_Base'Last;
+--     type    NeuronIndex_Base is new Natural;
+    --     subtype NeuronIndex is NeuronIndex_Base range 1 .. NeuronIndex_Base'Last;
+
+    -- Unlike inputs, outputs and neurons, layers are *internal* to nnet, dynamic constructs
+    -- it makes sense to have this as a local index
     type    LayerIndex_Base is new Natural;
     subtype LayerIndex  is LayerIndex_Base  range 1 .. LayerIndex_Base'Last;
 
 
     -- similar to Neuron_Interface, NNet_Interface uses same method signature for Outputs
     -- this package encapsulates the common interface, specific by index
-    package PCN is new Connectors(Index_Base      => OutputIndex_Base,
+    package PCN is new Connectors(Index_Base      => NNN.OutputIndex_Base,
                                   Connection_Type => ConnectionIndex,
                                   No_Connection   => No_Connection );
 
@@ -80,11 +83,11 @@ package dynn.nets is
 
     -- Dimension getters; the setters are imnplementation-specific,
     not overriding
-    function NInputs (net : NNet_Interface) return InputIndex_Base  is abstract;
+    function NInputs (net : NNet_Interface) return NNN.InputIndex_Base  is abstract;
     overriding  -- from Connectors
-    function NOutputs(net : NNet_Interface) return OutputIndex_Base is abstract;
+    function NOutputs(net : NNet_Interface) return NNN.OutputIndex_Base is abstract;
     not overriding
-    function NNeurons(net : NNet_Interface) return NeuronIndex is abstract;
+    function NNeurons(net : NNet_Interface) return NNN.NeuronIndex is abstract;
     not overriding
     function NLayers (net : NNet_Interface) return LayerIndex  is abstract;
 
@@ -97,10 +100,10 @@ package dynn.nets is
     -- So we access by element instead
     -- by internal indices
 --     not overriding
-    function  Input (net : NNet_Interface; i : InputIndex)  return PI.Input_Interface'Class is abstract;
+    function  Input (net : NNet_Interface; i : NNN.InputIndex)  return PI.Input_Interface'Class is abstract;
     --     function  Input (net : NNet_Interface'Class; i : NN.InputIndex)  return PI.InputRec;
 --     overriding
-    function  Output(net : NNet_Interface; o : OutputIndex) return ConnectionIndex is abstract; -- from Connectors
+    function  Output(net : NNet_Interface; o : NNN.OutputIndex) return ConnectionIndex is abstract; -- from Connectors
     --
     -- by glocal IDs - NOTE: these might be made class-wide..
     not overriding
@@ -126,8 +129,8 @@ package dynn.nets is
         -- as with Add, should update connections of affected entities and reset Layers_Sorted or autosort
 
     -- neuron accessor
-    function  Neuron(net : aliased in out NNet_Interface; idx : NeuronIndex)   return PN.Neuron_Reference is abstract;
-    function  Neuron(net : aliased in out NNet_Interface; idx : NNet_NeuronId) return PN.Neuron_Reference is abstract;
+    function  Neuron(net : aliased in out NNet_Interface; idx : NNN.NeuronIndex) return PN.Neuron_Reference is abstract;
+    function  Neuron(net : aliased in out NNet_Interface; idx : NNet_NeuronId)   return PN.Neuron_Reference is abstract;
         -- this provides read-write access via Accessor trick
     --function  Neuron(net : NNet_Interface; idx : NN.NeuronIndex) return PN.Neuron_Interface'Class is abstract;
         -- this provides read-only access, passing by reference (tagged record)
@@ -137,13 +140,13 @@ package dynn.nets is
     -- Similar to neurons, Add/Del and accessor primitives
     procedure Add_Layer(net : in out NNet_Interface;
                         L   : in out PL.Layer_Interface'Class; -- pass pre-created Layer
-                        idx : out NN.LayerIndex) is abstract;
+                        idx : out LayerIndex) is abstract;
     --
-    procedure Del_Layer(net : in out NNet_Interface; idx : NN.LayerIndex) is null;
+    procedure Del_Layer(net : in out NNet_Interface; idx : LayerIndex) is null;
     --
-    function  Layer(net : aliased in out NNet_Interface; idx : NN.LayerIndex) return PL.Layer_Reference is abstract;
+    function  Layer(net : aliased in out NNet_Interface; idx : LayerIndex) return PL.Layer_Reference is abstract;
         -- read-write access to Layers
-    function  Layer(net : NNet_Interface; idx : NN.LayerIndex) return PL.Layer_Interface'Class  is abstract;
+    function  Layer(net : NNet_Interface; idx : LayerIndex) return PL.Layer_Interface'Class  is abstract;
         -- read-only access to layers
 
     -- Layer sorting/creation prmitives
@@ -162,15 +165,15 @@ package dynn.nets is
     type Cached_NNet_Interface is abstract new NNet_Interface with private;
     type Cached_NNet_Access    is access Cached_NNet_Interface;
 
-    function  State(net : Cached_NNet_Interface) return NN.State_Vector  is abstract;
-    procedure Set_State(net : in out Cached_NNet_Interface; NSV : NN.State_Vector) is abstract;
+    function  State(net : Cached_NNet_Interface) return NNN.State_Vector  is abstract;
+    procedure Set_State(net : in out Cached_NNet_Interface; NSV : NNN.State_Vector) is abstract;
     -- NOTE: GetInputValues should raise  UnsetValueAccess if called before SetInputValues
 
     type Cached_Checked_NNet_Interface is abstract new NNet_Interface with private;
     type Cached_Checked_NNet_Access    is access Cached_NNet_Interface;
 
-    function  State(net : Cached_Checked_NNet_Interface) return NN.Checked_State_Vector  is abstract;
-    procedure Set_State(net : in out Cached_Checked_NNet_Interface; NSV : NN.Checked_State_Vector) is abstract;
+    function  State(net : Cached_Checked_NNet_Interface) return NNN.Checked_State_Vector  is abstract;
+    procedure Set_State(net : in out Cached_Checked_NNet_Interface; NSV : NNN.Checked_State_Vector) is abstract;
     -- NOTE: GetInputValues should raise  UnsetValueAccess if called before SetInputValues
 
     --------------------
@@ -179,13 +182,14 @@ package dynn.nets is
     type Stateful_NNet_Interface is abstract new NNet_Interface with private;
     type Stateful_NNet_Access    is access Stateful_NNet_Interface;
 
-    function  Input_Values(net : Stateful_NNet_Interface) return NN.Input_Array is abstract;
-    procedure Set_Input_Values(net : in out Stateful_NNet_Interface; IV : NN.Input_Array) is abstract;
+    function  Input_Values(net : Stateful_NNet_Interface) return NNN.Input_Array is abstract;
+    procedure Set_Input_Values(net : in out Stateful_NNet_Interface; IV : NNN.Input_Array) is abstract;
     --
-    function  Neuron(net : Stateful_NNet_Interface; idx : NN.NeuronIndex) return PN.Stateful_NeuronClass_Access is abstract;
+    function  Neuron(net : Stateful_NNet_Interface; idx : NNN.NeuronIndex) return PN.Stateful_NeuronClass_Access is abstract;
+    function  Neuron(net : Stateful_NNet_Interface; idx : NNet_NeuronId)   return PN.Stateful_NeuronClass_Access is abstract;
     procedure Add_Neuron(net  : in out Stateful_NNet_Interface;
                          neur : in out PN.Stateful_Neuron_Interface'Class; -- pass pre-created Neuron
-                         idx : out NN.NeuronIndex) is abstract;
+                         idx : out NNet_NeuronId) is abstract;
 
 
 
@@ -213,8 +217,8 @@ package dynn.nets is
     -- add To_Stream/From_stream and/or To_JSON/From_JSON? methods
 
     -- random constructors
-    procedure Reconnect_Neuron_At_Random(net : in out NNet_Interface'Class; idx  : NN.NeuronIndex; maxConnects : PN.InputIndex_Base := 0);
-    procedure Populate_At_Random (net : in out NNet_Interface'Class; Npts : NN.NeuronIndex_Base;  maxConnects : PN.InputIndex_Base := 0);
+    procedure Reconnect_Neuron_At_Random(net : in out NNet_Interface'Class; idx  : NNet_NeuronId; maxConnects : PN.InputIndex_Base := 0);
+    procedure Populate_At_Random (net : in out NNet_Interface'Class; Npts : NNet_NeuronId;  maxConnects : PN.InputIndex_Base := 0);
     -- populates net with new neurons or resets existing one to random configuration
     -- Npts needs to be passed in case of empty mutable net, otherwise it simply rearranges existing net.
     --
@@ -241,7 +245,7 @@ package dynn.nets is
     -- Forward and backward sort will produce different layering if cycles are present
     -- (which is a major modus operandi of this lib).
 
-    procedure Update_Layers (net : in out NNet_Interface'Class; idx : NN.NeuronIndex);
+    procedure Update_Layers (net : in out NNet_Interface'Class; idx : NNet_NeuronId); -- needs extra param: add/del op selector
     -- called upon insertion/deletion of a neuron to update pre-sroted layers
     -- if Autosort_Layers = True.
     -- Updates layers starting from the inserted neuron, following its connections.
@@ -255,32 +259,32 @@ package dynn.nets is
     --
     -- Forward prop through trained net
     -- stateless propagation net state is completely internal to this proc, no side effects
-    function  Prop_Forward(net : NNet_Interface'Class; inputs : NN.Input_Array)  return NN.Output_Array;
+    function  Prop_Forward(net : NNet_Interface'Class; inputs : NNN.Input_Array)  return NNN.Output_Array;
     --
-    function  Calc_Outputs(net : NNet_Interface'Class; NSV : NN.Checked_State_Vector) return NN.Output_Array;
-    function  Calc_Outputs(net : NNet_Interface'Class; NSV : NN.State_Vector) return NN.Output_Array;
+    function  Calc_Outputs(net : NNet_Interface'Class; NSV : NNN.Checked_State_Vector) return NNN.Output_Array;
+    function  Calc_Outputs(net : NNet_Interface'Class; NSV : NNN.State_Vector) return NNN.Output_Array;
 
     --  Cached NNet propagation
     --  initial values should be set first with Set_Input_Values and then advanced within net,
     --  no need for passing around intermediate inputs/outputs
     --
     -- first Unchecked version
-    function  Input_Values(net : Cached_NNet_Interface'Class) return NN.Input_Array;
+    function  Input_Values(net : Cached_NNet_Interface'Class) return NNN.Input_Array;
     --
-    procedure Set_Input_Values(net : in out Cached_NNet_Interface'Class; IV : NN.Input_Array);
+    procedure Set_Input_Values(net : in out Cached_NNet_Interface'Class; IV : NNN.Input_Array);
     --
     procedure Prop_Forward(net : Cached_NNet_Interface'Class);
     --
-    function  Calc_Outputs(net : Stateful_NNet_Interface'Class) return NN.Output_Array;
+    function  Calc_Outputs(net : Stateful_NNet_Interface'Class) return NNN.Output_Array;
 
     --  Checked version
-    function  Input_Values(net : Cached_Checked_NNet_Interface'Class) return NN.Input_Array;
+    function  Input_Values(net : Cached_Checked_NNet_Interface'Class) return NNN.Input_Array;
     --
-    procedure Set_Input_Values(net : in out Cached_Checked_NNet_Interface'Class; IV : NN.Input_Array);
+    procedure Set_Input_Values(net : in out Cached_Checked_NNet_Interface'Class; IV : NNN.Input_Array);
     --
     procedure Prop_Forward(net : Cached_Checked_NNet_Interface'Class);
     --
-    function  Calc_Outputs(net : Cached_Checked_NNet_Interface'Class) return NN.Output_Array;
+    function  Calc_Outputs(net : Cached_Checked_NNet_Interface'Class) return NNN.Output_Array;
 
 
 private

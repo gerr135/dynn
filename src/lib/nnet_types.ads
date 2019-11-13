@@ -75,8 +75,8 @@ package nnet_types is
     type    NeuronIndex_Base is new Natural;
     subtype NeuronIndex is NeuronIndex_Base range 1 .. NeuronIndex_Base'Last;
     --
-    type    LayerIndex_Base  is new Natural;
-    subtype LayerIndex  is LayerIndex_Base  range 1 .. LayerIndex_Base'Last;
+--     type    LayerIndex_Base  is new Natural;
+--     subtype LayerIndex  is LayerIndex_Base  range 1 .. LayerIndex_Base'Last;
     -- There is always at least one layer;
     -- However, unlike common neural net libs, there may not be a strict input/output layer
     -- or even well defined layer structure.

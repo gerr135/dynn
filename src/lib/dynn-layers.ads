@@ -29,7 +29,8 @@ package dynn.layers is
     type    InputIndex_Base is new Natural;
     subtype InputIndex  is InputIndex_Base range 1 .. InputIndex_Base'Last;
     type    OutputIndex is new Positive;
-    -- to track neurons associated with the layer
+    -- to track neurons associated with the layer.
+    --  NOTE: this is *different* from NeuronIndex defined in dynn.nets
     type    NeuronIndex_Base is new Natural;
     subtype NeuronIndex is NeuronIndex_Base range 1 .. NeuronIndex_Base'Last;
 
@@ -98,6 +99,7 @@ package dynn.layers is
     --     procedure Add_Neuron(LI : in out Layer_Interface; neur : PN.NeuronClass_Access) is abstract;
     --     procedure Del_Neuron(LI : in out Layer_Interface; idx : NeuronIndex) is abstract;
     function  Neuron(LI : Layer_Interface; idx : NeuronIndex) return PN.NeuronClass_Access is abstract;
+    function  Neuron(LI : Layer_Interface; idx : NNet_NeuronId) return PN.NeuronClass_Access is abstract;
     --     procedure Reset_Neuron(LI : Layer_Interface; idx : NeuronIndex; np : PN.Neuron_Access) is abstract;
 
     procedure Add_Neuron(LI : in out Layer_Interface; Nidx : NNet_NeuronId) is abstract;
@@ -112,13 +114,13 @@ package dynn.layers is
     -- class-wide methods to keep actual code and glue primitives.
     --
     --  stateless propagation, no side effects
-    function  Prop_Forward(L : Layer_Interface; inputs : NN.State_Vector) return NN.State_Vector;
-    function  Prop_Forward(L : Layer_Interface; inputs : NN.Checked_State_Vector) return NN.Checked_State_Vector;
+    function  Prop_Forward(L : Layer_Interface; inputs : NNN.State_Vector) return NNN.State_Vector;
+    function  Prop_Forward(L : Layer_Interface; inputs : NNN.Checked_State_Vector) return NNN.Checked_State_Vector;
     --
     -- these (procedural form) should be much more efficient, as the State_Vector is modified directly
     -- instead of being recreated all the time..
-    procedure Prop_Forward(L : Layer_Interface; SV : in out NN.State_Vector);
-    procedure Prop_Forward(L : Layer_Interface; SV : in out NN.Checked_State_Vector);
+    procedure Prop_Forward(L : Layer_Interface; SV : in out NNN.State_Vector);
+    procedure Prop_Forward(L : Layer_Interface; SV : in out NNN.Checked_State_Vector);
 
     -- stateful propagation, only makes sense for some cases.
     --     procedure SetInputs(L : in out Layer_Interface'Class; inputs : ValueArray);
@@ -133,8 +135,8 @@ package dynn.layers is
     type Matrix_LayerClass_Access is access Matrix_Layer_Interface'Class;
 
     --  stateless propagation, no side effects
-    function  Prop_Forward(L : Matrix_Layer_Interface; inputs : NN.State_Vector) return NN.State_Vector;
-    function  Prop_Forward(L : Matrix_Layer_Interface; inputs : NN.Checked_State_Vector) return NN.Checked_State_Vector;
+    function  Prop_Forward(L : Matrix_Layer_Interface; inputs : NNN.State_Vector) return NNN.State_Vector;
+    function  Prop_Forward(L : Matrix_Layer_Interface; inputs : NNN.Checked_State_Vector) return NNN.Checked_State_Vector;
 
     -- stateful propagation, only makes sense for some cases.
     procedure Prop_Forward_Basic(L : Matrix_Layer_Interface);

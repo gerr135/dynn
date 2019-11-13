@@ -29,11 +29,15 @@ package dynn.neurons is
     type    OutputIndex_Base is new Natural;
     subtype OutputIndex is OutputIndex_Base range 1 .. OutputIndex_Base'Last;
 
-    -- associated arrray types for holding params
+--     -- associated arrray types for holding params
     type Input_Connection_Array  is array (InputIndex  range <>) of ConnectionIndex;
     type Output_Connection_Array is array (OutputIndex range <>) of ConnectionIndex;
     type Weight_Array  is array (InputIndex_Base range <>) of Real;
-    type Value_Array   is array (InputIndex range <>) of Real;
+--     type Value_Array   is array (InputIndex range <>) of Real;
+    -- this one is not very useful, as it should be the state of the entire NNet that is propagated.
+    -- This can be done on per-neuron basis (albeit much less efficiently than per-layer),
+    -- but that would use the NNet value arrays, as defined in nnet_types.ads
+    -- Keeping these local types commented for now. To be removed later.
 
 
     -------------------------------------------------
@@ -144,7 +148,9 @@ package dynn.neurons is
     -- optimized layer-based propagators should be used instead.
     --
     -- basic ops, calcs use pre-picked (and repackages if needed) values
-    function  Prop_Forward(neur : Neuron_Interface'Class; data  : Value_Array) return Real;
+    -- NOTE: this is only useful if applied to a NNet state, so it should operate on
+    --  NNet-wide value_array (defined in nnet_types), not a local one..
+--     function  Prop_Forward(neur : Neuron_Interface'Class; data  : Value_Array) return Real;
         -- makes the x*W+bias |-> activation calculation; caches output internally
 
     -- Utility wrappers for propagators

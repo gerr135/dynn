@@ -88,8 +88,6 @@ package dynn is
     --  trying to make connection that obviously makes no sense
     --  (connect neuron input to net output, etc..)
 
---     package NN is new nnet_types(Real);
-
     ------------------------------------------------------------
     -- Some common types; basic and not requiring special naming
     --
@@ -111,6 +109,8 @@ package dynn is
     --------------------------------------------------------------
     -- global NNet component addressing
     --   former global index type, under nnet_types
+    package NNN is new nnet_types(Real);
+
 
     -- all Id types share functionality, so define a common root type
     package Component_Id is
@@ -140,7 +140,7 @@ package dynn is
     type NNet_InputId  is new Component_Id.Id_Type;
     type NNet_OutputId is new Component_Id.Id_Type;
     type NNet_NeuronId is new Component_Id.Id_Type;
-    type NNet_LayerId  is new Component_Id.Id_Type;
+--     type NNet_LayerId  is new Component_Id.Id_Type; - no sense, layers are auto(re)formed
 
 
     --------------------------------------------------
