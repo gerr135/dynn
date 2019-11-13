@@ -42,11 +42,13 @@ package dynn.layers.vectors is
     function  NNeurons(L : Layer) return NeuronIndex_Base;
 
     overriding
-    procedure Add_Neuron(L : in out Layer; Nidx : NN.NeuronIndex);
+    procedure Add_Neuron(L : in out Layer; Nidx : NNet_NeuronId);
     --     procedure DelNeuron(LI : Layer_Interface; idx : NeuronIndex) is abstract;
 
     overriding
-    function  Neuron(L : Layer; idx : NeuronIndex) return PN.NeuronClass_Access;
+    function  Neuron(L : Layer; idx : NeuronIndex)   return PN.NeuronClass_Access;
+    overriding
+    function  Neuron(L : Layer; idx : NNet_NeuronId) return PN.NeuronClass_Access;
     --     procedure SetNeuron(LI : Layer_Interface; idx : NeuronIndex; np : PN.Neuron_Access) is abstract;
 
 --     not overriding
@@ -58,11 +60,11 @@ package dynn.layers.vectors is
 private
 
     -- needed vector types
-    use type NN.NeuronIndex;
-    package NV is new Ada.Containers.Vectors(Index_Type=>NeuronIndex,  Element_Type=>NN.NeuronIndex);
+--     use type NN.NeuronIndex;
+    package NV is new Ada.Containers.Vectors(Index_Type=>NeuronIndex,  Element_Type=>NNet_NeuronId);
 
     type Layer is new Layer_Interface with record
-        idx     : NN.LayerIndex_Base; -- own index in NNet
+--         idx     : NN.LayerIndex_Base; -- own index in NNet  - do we need it?
         neurons : NV.Vector;
     end record;
 

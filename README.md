@@ -45,3 +45,14 @@ NNet consists of [inputs,neurons,outputs; layers].
     Created automatically by sort methods or autoupdated if autosort is set.
 
 
+### Tech issues to meditate upon
+1. Now that the original net indices (NN.NeuronIndex, etc) were split in 2 - internal index (as before) and Ids, the NNet/Layer interface may need
+   a bit of rethinking. Specifically: access to entries (intputs, outputs, neuorns, etc..). It is possible to have 2 approaches:
+
+   1. access by internal indices as primitives, access by Ids as class-wides, implemented uniformly at 1st level.
+   This would keep all the common algruthms at 1st level and implementation details at 2nd. But this would freeze the interface,
+   limiting types of element storage that can be used.
+
+   2. access by Ids directly as primitives. Forego access by internal indices completely?
+   This may lead to duplication of access algorithms (e.g. reverse lookup tables: Id -> internal index) at 2nd level, but may be more generic storage-type wise..
+   The question here - is it even possible? Depends on nnet handling method bosied.. May not be worth the effort in the end, given expected code duplication.

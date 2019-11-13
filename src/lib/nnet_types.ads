@@ -85,34 +85,34 @@ package nnet_types is
     -- In general these will have to be treated on individual basis,
     -- so, checks should be made based on the ConnectionType of each output.
 
-    --------------------------------------------------
-    -- Topology
-    -- Types for keeping/passing around connection info
-    --
-    -- The neuron inter-connection type
-    type Connection_Type is (I, O, N, None);
-    -- Input, Output, Neuron, but intended to be used in assignment, so shortening down
-    --
-    type ConnectionIndex(T : Connection_Type := None) is record
-        case T is
-            when None => Null;
-            when I => Iidx : InputIndex;
-            when N => Nidx : NeuronIndex;
-            when O => Oidx : OutputIndex;
-        end case;
-    end record;
-
-    No_Connection : constant ConnectionIndex := (t=> None);
-
-    -- now, arrays of connections
-    -- NOTE: only the Output_Connection_Array makes conceptual sense here,
-    -- as the only one having 1-to-1 routing (NNet output can take input from only 1 neuron)
-    -- all others would be more complex with their 1-to-many or many-to-many mappings..
---     type Input_Connection_Array  is array (InputIndex  range <>) of ConnectionIndex;
---     type Neuron_Connection_Array is array (NeuronIndex range <>) of ConnectionIndex;
-    type Output_Connection_Array is array (OutputIndex range <>) of ConnectionIndex;
-
-    function Con2Str(connection : ConnectionIndex) return String;
+--     --------------------------------------------------  - in dynn.ads now, using Id types
+--     -- Topology
+--     -- Types for keeping/passing around connection info
+--     --
+--     -- The neuron inter-connection type
+--     type Connection_Type is (I, O, N, None);
+--     -- Input, Output, Neuron, but intended to be used in assignment, so shortening down
+--     --
+--     type ConnectionIndex(T : Connection_Type := None) is record
+--         case T is
+--             when None => Null;
+--             when I => Iidx : InputIndex;
+--             when N => Nidx : NeuronIndex;
+--             when O => Oidx : OutputIndex;
+--         end case;
+--     end record;
+--
+--     No_Connection : constant ConnectionIndex := (t=> None);
+--
+--     -- now, arrays of connections
+--     -- NOTE: only the Output_Connection_Array makes conceptual sense here,
+--     -- as the only one having 1-to-1 routing (NNet output can take input from only 1 neuron)
+--     -- all others would be more complex with their 1-to-many or many-to-many mappings..
+-- --     type Input_Connection_Array  is array (InputIndex  range <>) of ConnectionIndex;
+-- --     type Neuron_Connection_Array is array (NeuronIndex range <>) of ConnectionIndex;
+--     type Output_Connection_Array is array (OutputIndex range <>) of ConnectionIndex;
+--
+--     function Con2Str(connection : ConnectionIndex) return String;
 
 
     --------------------------------------------------
@@ -150,7 +150,7 @@ package nnet_types is
         output : Output_Array(1 .. No);
     end record;
 
-    function State_Value(SV : State_Vector; idx : ConnectionIndex) return Real with Inline;
+--     function State_Value(SV : State_Vector; idx : ConnectionIndex) return Real with Inline;
 
 
     --  Checked state vector
@@ -169,8 +169,8 @@ package nnet_types is
         -- but better profile first before going with a more involved design
     end record;
 
-    function Is_Valid(SV : Checked_State_Vector; idx : ConnectionIndex)
-        return Boolean with Inline;
+--     function Is_Valid(SV : Checked_State_Vector; idx : ConnectionIndex)
+--         return Boolean with Inline;
 
     function Inputs_are_valid (SV : Checked_State_Vector) return Boolean;
     function Outputs_are_valid(SV : Checked_State_Vector) return Boolean;

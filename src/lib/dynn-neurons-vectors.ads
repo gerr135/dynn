@@ -37,12 +37,14 @@ package dynn.neurons.vectors is
     function NInputs (neur : Neuron) return InputIndex ;
     --
     overriding
-    function Input (neur : Neuron; idx : InputIndex)  return NN.ConnectionIndex;
+    function Input (neur : Neuron; idx : InputIndex)   return ConnectionIndex;
+    overriding
+    function Input (neur : Neuron; idx : Nnet_InputId) return ConnectionIndex;
     --
     overriding
-    procedure Add_Input(neur : in out Neuron; Input : NN.ConnectionIndex);
+    procedure Add_Input(neur : in out Neuron; Input : ConnectionIndex);
     overriding
-    procedure Del_Input(neur : in out Neuron; Input : NN.ConnectionIndex);
+    procedure Del_Input(neur : in out Neuron; Input : ConnectionIndex);
     --
     -- Outputs are inherited from connectors
 
@@ -67,13 +69,13 @@ package dynn.neurons.vectors is
 private
 
     -- needed vector types
-    use type NN.ConnectionIndex;
-    package IV is new Ada.Containers.Vectors(Index_Type=>InputIndex,  Element_Type=>NN.ConnectionIndex);
-    package OV is new Ada.Containers.Vectors(Index_Type=>OutputIndex, Element_Type=>NN.ConnectionIndex);
+--     use type NN.ConnectionIndex;
+    package IV is new Ada.Containers.Vectors(Index_Type=>InputIndex,  Element_Type=>ConnectionIndex);
+    package OV is new Ada.Containers.Vectors(Index_Type=>OutputIndex, Element_Type=>ConnectionIndex);
     package WV is new Ada.Containers.Vectors(Index_Type=>InputIndex_Base, Element_Type=>Real);
 
     type Neuron is new PCNV.Connector_Vector and Neuron_Interface with record
-        idx     : NN.NeuronIndex_Base; -- own index in NNet
+        idx     : Nnet_InputId; -- own index in NNet
         activat : Activation_Type;
         lag     : Real;    -- delay of result propagation, unused for now
         inputs  : IV.Vector;

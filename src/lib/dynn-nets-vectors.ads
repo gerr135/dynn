@@ -52,23 +52,27 @@ package dynn.nets.vectors is
 
     -- Getters --
     overriding
-    function NInputs (net : NNet) return NN.InputIndex_Base;
+    function NInputs (net : NNet) return NNN.InputIndex_Base;
 
     overriding
-    function NOutputs(net : NNet) return NN.OutputIndex_Base;
+    function NOutputs(net : NNet) return NNN.OutputIndex_Base;
 
     overriding
-    function NNeurons(net : NNet) return NN.NeuronIndex;
+    function NNeurons(net : NNet) return NNN.NeuronIndex;
 
     overriding
-    function NLayers (net : NNet) return NN.LayerIndex;
+    function NLayers (net : NNet) return LayerIndex;
 
     -- IO handling --
     overriding
-    function  Input (net : NNet; i : NN.InputIndex)  return PI.Input_Interface'Class;
+    function  Input (net : NNet; i : NNN.InputIndex) return PI.Input_Interface'Class;
+    overriding
+    function  Input (net : NNet; i : NNet_InputId)   return PI.Input_Interface'Class;
 
     overriding
-    function  Output(net : NNet; o : NN.OutputIndex) return NN.ConnectionIndex;
+    function  Output(net : NNet; o : NNN.OutputIndex) return ConnectionIndex;
+    overriding
+    function  Output(net : NNet; o : NNet_OutputId)   return ConnectionIndex;
 
     -- this version also has mutable IO, so we need methods to add/remore inputs and outputs
     not overriding
@@ -82,7 +86,7 @@ package dynn.nets.vectors is
     procedure Add_Output(net : in out NNet; N : NN.OutputIndex := 1);
 
     overriding
-    procedure Connect_Output(net : in out NNet; idx : NN.OutputIndex; val : NN.ConnectionIndex);
+    procedure Connect_Output(net : in out NNet; idx : NN.OutputIndex; val : ConnectionIndex);
 
     overriding
     procedure Del_Output(net : in out NNet; Output : NN.ConnectionIndex);

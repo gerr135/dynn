@@ -81,7 +81,7 @@ package dynn.nets is
     type NNet_Interface is abstract limited new PCN.Connector_Interface with private;
     type NNet_Access is access NNet_Interface'Class;
 
-    -- Dimension getters; the setters are imnplementation-specific,
+    -- Dimension getters; the setters are imnplementation-specific
     not overriding
     function NInputs (net : NNet_Interface) return NNN.InputIndex_Base  is abstract;
     overriding  -- from Connectors

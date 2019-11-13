@@ -101,8 +101,8 @@ package dynn.neurons is
     -- primitives giving access to commonnly used fields/methods
     -- Input handling, same interface layout as for Connector_Interface
     function NInputs (neur : Neuron_Interface) return InputIndex  is abstract;
-    function Input (neur : Neuron_Interface; idx : InputIndex)  return ConnectionIndex is abstract;
-    function Input (neur : Neuron_Interface; id  : Nnet_InputId)  return ConnectionIndex is abstract;
+    function Input (neur : Neuron_Interface; idx : InputIndex)   return ConnectionIndex is abstract;
+    function Input (neur : Neuron_Interface; id  : Nnet_InputId) return ConnectionIndex is abstract;
     --
     procedure Add_Input(neur : in out Neuron_Interface; Input : ConnectionIndex) is abstract;
     procedure Del_Input(neur : in out Neuron_Interface; Input : ConnectionIndex) is abstract;
