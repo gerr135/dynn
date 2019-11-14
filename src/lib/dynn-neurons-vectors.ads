@@ -73,7 +73,7 @@ private
     package WV is new Ada.Containers.Vectors(Index_Type=>InputIndex_Base, Element_Type=>Real);
 
     type Neuron is new PCNV.Connector_Vector and Neuron_Interface with record
-        idx     : Nnet_InputId; -- own index in NNet
+        idx     : Nnet_NeuronId; -- own index in NNet
         activat : Activation_Type;
         lag     : Real;    -- delay of result propagation, unused for now
         inputs  : IV.Vector;

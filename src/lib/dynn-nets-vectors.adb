@@ -7,40 +7,40 @@ package body dynn.nets.vectors is
     -- Dimension getters
     --
     overriding
-    function NInputs (net : NNet) return NN.InputIndex_Base is
+    function NInputs (net : NNet) return NNN.InputIndex_Base is
     begin
-        return NN.InputIndex(net.inputs.Length);
+        return NNN.InputIndex_Base(net.inputs.Length);
     end;
 
     overriding
-    function NOutputs(net : NNet) return NN.OutputIndex_Base is
+    function NOutputs(net : NNet) return NNN.OutputIndex_Base is
     begin
-        return NN.OutputIndex(net.outputs.Length);
+        return NNN.OutputIndex_Base(net.outputs.Length);
     end;
 
     overriding
-    function NNeurons (net : NNet) return NN.NeuronIndex is
+    function NNeurons (net : NNet) return NNN.NeuronIndex is
     begin
-        return NN.NeuronIndex_Base(net.neurons.Length);
+        return NNN.NeuronIndex_Base(net.neurons.Length);
     end NNeurons;
 
     overriding
-    function NLayers (net : NNet) return NN.LayerIndex is
+    function NLayers (net : NNet) return LayerIndex is
     begin
-        return NN.LayerIndex_Base(net.layers.Length);
+        return LayerIndex_Base(net.layers.Length);
     end NLayers;
 
     ---------------------------
     -- IO handling
     --
     overriding
-    function  Input (net : NNet; i : NN.InputIndex)  return PI.Input_Interface'Class is
+    function  Input (net : NNet; i : NNN.InputIndex)  return PI.Input_Interface'Class is
     begin
         return net.inputs(i);
     end;
 
     overriding
-    function  Output(net : NNet; o : NN.OutputIndex) return NN.ConnectionIndex is
+    function  Output(net : NNet; o : NNN.OutputIndex) return ConnectionIndex is
     begin
         return net.outputs(o);
     end;
@@ -51,27 +51,31 @@ package body dynn.nets.vectors is
     overriding
     procedure Add_Neuron (net : in out NNet;
                           neur : in out PN.Neuron_Interface'Class;
-                          idx : out NN.NeuronIndex)
+                          idx : out NNet_NeuronId)
     is
         use type Ada.Containers.Count_Type;
     begin
         -- generate new index
-        idx := NN.NeuronIndex(net.neurons.Length + 1); -- new index
-        GT.Trace(Debug, "net.Add_Neuron" & idx'Img);
+        pragma Compile_Time_Warning (Standard.True, "algorythmic TODO item");
+        raise Program_Error with "Unimplemented lookup of free NeuronId";
+        idx := NNet_NeuronId(net.neurons.Length + 1); -- new index - need algorithm to lookup free NeuronId
+        GT.Trace(Debug, "net.Add_Neuron" & int(idx)'Img);
         -- set generated idx in neuron and add it to the NNet container
         neur.Set_Index(idx);
         net.neurons.Append(neur);
         -- now connect neuron inputs to outputs of other entities that are already in NNet
+        pragma Compile_Time_Warning (Standard.True, "rewrite below as iterator for input of neur.Inputs loop");
+        -- this will also prevent the name clashing with I,N, etc..
         for i in 1 .. neur.NInputs loop
             declare
-                input : NN.ConnectionIndex := neur.Input(i);
+                input : ConnectionIndex := neur.Input(i);
             begin
                 GT.Trace(Debug, "  adding input" & i'Img
-                         & "  (" & NN.Con2Str(input) & ")");
+                         & "  (" & Con2Str(input) & ")");
                 case input.T is
-                    when NN.I => net.inputs (input.Iidx).Add_and_Connect((NN.N,idx));
-                    when NN.N => net.neurons(input.Nidx).Add_and_Connect((NN.N,idx));
-                    when NN.O | NN.None => raise Invalid_Connection;
+                    when dynn.I => net.inputs (input.Iidx).Add_and_Connect((N,idx));
+                    when dynn.N => net.neurons(input.Nidx).Add_and_Connect((N,idx));
+                    when dynn.O | None => raise Invalid_Connection;
                 end case;
             end;
         end loop;
@@ -82,30 +86,30 @@ package body dynn.nets.vectors is
     end Add_Neuron;
 
     overriding
-    procedure Del_Neuron (net : in out NNet; idx : NN.NeuronIndex) is
+    procedure Del_Neuron (net : in out NNet; idx : NNet_NeuronId) is
         neur : PN.Neuron_Interface'Class := net.Neuron(idx);
-        self : NN.ConnectionIndex := (NN.N, idx);
+        self : ConnectionIndex := (N, idx);
     begin
         -- first disconnect the connections
         for i in 1 .. neur.NInputs loop
             declare
-                input : NN.ConnectionIndex := neur.Input(i);
+                input : ConnectionIndex := neur.Input(i);
             begin
                 case input.T is
-                    when NN.I => net.inputs (input.Iidx).Del_Output(self);
-                    when NN.N => net.neurons(input.Nidx).Del_Output(self);
-                    when NN.O | NN.None => raise Invalid_Connection;
+                    when dynn.I => net.inputs (input.Iidx).Del_Output(self);
+                    when dynn.N => net.neurons(input.Nidx).Del_Output(self);
+                    when dynn.O | None => raise Invalid_Connection;
                 end case;
             end;
         end loop;
         for o in 1 .. neur.NOutputs loop
             declare
-                output : NN.ConnectionIndex := neur.Output(o);
+                output : ConnectionIndex := neur.Output(o);
             begin
                 case output.T is
-                    when NN.I | NN.None => raise Invalid_Connection;
-                    when NN.N => net.neurons(output.Nidx).Del_Input(self);
-                    when NN.O => net.outputs(output.Oidx) := (T=>NN.None);
+                    when dynn.I | None => raise Invalid_Connection;
+                    when dynn.N => net.neurons(output.Nidx).Del_Input(self);
+                    when dynn.O => net.outputs(output.Oidx) := (T => None);
                 end case;
             end;
         end loop;
@@ -129,7 +133,7 @@ package body dynn.nets.vectors is
     end Del_Neuron;
 
     overriding
-    function Neuron (net : aliased in out NNet; idx : NN.NeuronIndex)
+    function Neuron (net : aliased in out NNet; idx : NNN.NeuronIndex)
         return PN.Neuron_Reference
     is
         NVR : NV.Reference_Type := net.neurons.Reference(idx);
@@ -151,7 +155,7 @@ package body dynn.nets.vectors is
     -- Layer handling
     overriding
     procedure Add_Layer(net : in out NNet; L   : in out PL.Layer_Interface'Class;
-                        idx : out NN.LayerIndex)
+                        idx : out LayerIndex)
     is
     begin
         pragma Compile_Time_Warning (Standard.True, "Add_Layer unimplemented");
@@ -159,7 +163,7 @@ package body dynn.nets.vectors is
     end;
 
     overriding
-    procedure Del_Layer(net : in out NNet; idx : NN.LayerIndex) is
+    procedure Del_Layer(net : in out NNet; idx : LayerIndex) is
     begin
         pragma Compile_Time_Warning (Standard.True, "Del_Layer unimplemented");
         raise Program_Error with "Unimplemented procedure Del_Layer";
@@ -167,7 +171,7 @@ package body dynn.nets.vectors is
 
     overriding
     function  Layer(net : aliased in out NNet;
-                    idx : NN.LayerIndex) return PL.Layer_Reference is
+                    idx : LayerIndex) return PL.Layer_Reference is
         LVR : LV.Reference_Type := net.layers.Reference(idx);
         LR  : PL.Layer_Reference(LVR.Element);
     begin
@@ -175,7 +179,7 @@ package body dynn.nets.vectors is
     end Layer;
 
     overriding
-    function Layer (net : NNet; idx : NN.LayerIndex)
+    function Layer (net : NNet; idx : LayerIndex)
         return PL.Layer_Interface'Class
     is
     begin
@@ -195,9 +199,9 @@ package body dynn.nets.vectors is
     -- Constructors
     --
     not overriding
-    function Create(Ni : NN.InputIndex; No : NN.OutputIndex) return NNet is
+    function Create(Ni : NNN.InputIndex; No : NNN.OutputIndex) return NNet is
         emptyInput  : PI.Input_Vector;
-        emptyOutput : NN.ConnectionIndex := (T=>NN.None);
+        emptyOutput : ConnectionIndex := (T=>None);
     begin
         return net : NNet do
             net.inputs.Append(emptyInput, Ada.Containers.Count_Type(Ni));
@@ -219,14 +223,14 @@ package body dynn.nets.vectors is
     -- Input handling
 
     not overriding
-    procedure Add_Input(net : in out NNet; N : NN.InputIndex := 1) is
+    procedure Add_Input(net : in out NNet; N : NNN.InputIndex := 1) is
         emptyInput  : PI.Input_Vector;
     begin
         net.inputs.Append(emptyInput, Ada.Containers.Count_Type(N));
     end;
 
     not overriding
-    procedure Del_Input(net : in out NNet; idx : NN.InputIndex) is
+    procedure Del_Input(net : in out NNet; idx : NNN.InputIndex) is
     begin
         -- as with Neuron deletion, this is a tricky issue, as it may require reindexing
         -- many connections
@@ -236,27 +240,27 @@ package body dynn.nets.vectors is
     end;
 
     overriding
-    procedure Add_Output(net : in out NNet; N : NN.OutputIndex := 1) is
-        emptyOutput  : NN.ConnectionIndex := (T=>NN.None);
+    procedure Add_Output(net : in out NNet; N : NNN.OutputIndex := 1) is
+        emptyOutput  : ConnectionIndex := (T=>None);
     begin
         net.outputs.Append(emptyOutput, Ada.Containers.Count_Type(N));
     end;
 
     overriding
-    procedure Connect_Output(net : in out NNet; idx : NN.OutputIndex; val : NN.ConnectionIndex) is
+    procedure Connect_Output(net : in out NNet; idx : NNN.OutputIndex; val : ConnectionIndex) is
     begin
         -- A NNet output takes signal from a single neuron or input
         -- but we have to set both sides of a connection
         net.outputs.Replace_Element(idx, val);  -- direct assignment raises "discriminant check failed" here..
         case val.T is
-            when NN.I => net.inputs (val.Iidx).Add_and_Connect((NN.O,idx));
-            when NN.N => net.neurons(val.Nidx).Add_and_Connect((NN.O,idx));
-            when NN.O | NN.None => raise Invalid_Connection;
+            when I => net.inputs (val.Iidx).Add_and_Connect((O,idx));
+            when N => net.neurons(val.Nidx).Add_and_Connect((O,idx));
+            when O | None => raise Invalid_Connection;
         end case;
     end;
 
     overriding
-    procedure Del_Output(net : in out NNet; Output : NN.ConnectionIndex) is
+    procedure Del_Output(net : in out NNet; Output : ConnectionIndex) is
     begin
         -- as with Neuron deletion, this is a tricky issue, as it may require reindexing
         -- many connections

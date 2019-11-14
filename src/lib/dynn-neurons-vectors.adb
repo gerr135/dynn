@@ -53,7 +53,7 @@ package body dynn.neurons.vectors is
     --  NOTE: these are Neuron primitives, only operate on this individual neuron
     --  other side of connections is updated by the enclosing NNet
     overriding
-    procedure Add_Input (neur : in out Neuron; Input : NN.ConnectionIndex) is
+    procedure Add_Input (neur : in out Neuron; Input : ConnectionIndex) is
     begin
         for i of neur.inputs loop
             -- ensure that passed connection is not a duplicate
@@ -65,7 +65,7 @@ package body dynn.neurons.vectors is
     end Add_Input;
 
     overriding
-    procedure Del_Input (neur : in out Neuron; Input : NN.ConnectionIndex) is
+    procedure Del_Input (neur : in out Neuron; Input : ConnectionIndex) is
         -- same logic as in connectors.vectors
     begin
         -- search for the connection
@@ -91,7 +91,7 @@ package body dynn.neurons.vectors is
     end NInputs;
 
     overriding
-    function Input (neur : Neuron; idx : InputIndex) return NN.ConnectionIndex is
+    function Input (neur : Neuron; idx : InputIndex) return ConnectionIndex is
     begin
         return neur.inputs.Element(idx);
     end Input;
@@ -124,7 +124,7 @@ package body dynn.neurons.vectors is
     is
         neur : Neuron;
     begin
-        neur.idx := 0;
+        neur.idx := +0;
         neur.activat := activation;
         neur.lag := 0.0;
         -- populate inputs and weights vectors
@@ -146,7 +146,7 @@ package body dynn.neurons.vectors is
         G : Ada.Numerics.Float_Random.Generator;
         use Ada.Numerics.Float_Random;
     begin
-        neur.idx := 0;
+        neur.idx := +0;
         neur.activat := activation;
         neur.lag := 0.0;
         -- populate inputs and weights vectors
