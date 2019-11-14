@@ -38,8 +38,6 @@ package dynn.neurons.vectors is
     --
     overriding
     function Input (neur : Neuron; idx : InputIndex)   return ConnectionIndex;
-    overriding
-    function Input (neur : Neuron; idx : Nnet_InputId) return ConnectionIndex;
     --
     overriding
     procedure Add_Input(neur : in out Neuron; Input : ConnectionIndex);

@@ -99,13 +99,16 @@ package dynn.layers is
     --     procedure Add_Neuron(LI : in out Layer_Interface; neur : PN.NeuronClass_Access) is abstract;
     --     procedure Del_Neuron(LI : in out Layer_Interface; idx : NeuronIndex) is abstract;
     function  Neuron(LI : Layer_Interface; idx : NeuronIndex) return PN.NeuronClass_Access is abstract;
-    function  Neuron(LI : Layer_Interface; idx : NNet_NeuronId) return PN.NeuronClass_Access is abstract;
     --     procedure Reset_Neuron(LI : Layer_Interface; idx : NeuronIndex; np : PN.Neuron_Access) is abstract;
 
     procedure Add_Neuron(LI : in out Layer_Interface; Nidx : NNet_NeuronId) is abstract;
     -- adds neuron to layer by index. Ignores duplicates (so that each neuron is added only once)
     -- NOTE: layers are supposed to only hold neurons, no outputs, so enforcing proper idx type.
     --  prop logic needsrethuinking here - what happens with pass-through connections?
+
+    -----------------------------------------
+    -- common (class-wide) component access
+    function  Neuron(LI : Layer_Interface'Class; idx : NNet_NeuronId) return PN.NeuronClass_Access;
 
 
     --------------

@@ -66,55 +66,51 @@ package dynn.nets.vectors is
     -- IO handling --
     overriding
     function  Input (net : NNet; i : NNN.InputIndex) return PI.Input_Interface'Class;
-    overriding
-    function  Input (net : NNet; i : NNet_InputId)   return PI.Input_Interface'Class;
 
     overriding
     function  Output(net : NNet; o : NNN.OutputIndex) return ConnectionIndex;
-    overriding
-    function  Output(net : NNet; o : NNet_OutputId)   return ConnectionIndex;
 
     -- this version also has mutable IO, so we need methods to add/remore inputs and outputs
     not overriding
-    procedure Add_Input(net : in out NNet; N : NN.InputIndex := 1);
+    procedure Add_Input(net : in out NNet; N : NNN.InputIndex := 1);
     -- Append (N) new unconnected inputs. Connections are to be made upon neuron adds/mods
 
     not overriding
-    procedure Del_Input(net : in out NNet; idx : NN.InputIndex);
+    procedure Del_Input(net : in out NNet; idx : NNN.InputIndex);
 
     overriding
-    procedure Add_Output(net : in out NNet; N : NN.OutputIndex := 1);
+    procedure Add_Output(net : in out NNet; N : NNN.OutputIndex := 1);
 
     overriding
-    procedure Connect_Output(net : in out NNet; idx : NN.OutputIndex; val : ConnectionIndex);
+    procedure Connect_Output(net : in out NNet; idx : NNN.OutputIndex; val : ConnectionIndex);
 
     overriding
-    procedure Del_Output(net : in out NNet; Output : NN.ConnectionIndex);
+    procedure Del_Output(net : in out NNet; Output : ConnectionIndex);
 
     -- neuron handling --
     overriding
     procedure Add_Neuron(net : in out NNet; neur : in out PN.Neuron_Interface'Class;
-                         idx : out NN.NeuronIndex);
+                         idx : out NNet_NeuronId);
 
     overriding
-    procedure Del_Neuron(net : in out NNet; idx : NN.NeuronIndex);
+    procedure Del_Neuron(net : in out NNet; idx : NNet_NeuronId);
 
     overriding
-    function  Neuron(net : aliased in out NNet; idx : NN.NeuronIndex) return PN.Neuron_Reference;
+    function  Neuron(net : aliased in out NNet; idx : NNN.NeuronIndex) return PN.Neuron_Reference;
 
     -- Layer handling --
     overriding
     procedure Add_Layer(net : in out NNet; L   : in out PL.Layer_Interface'Class;
-                        idx : out NN.LayerIndex);
+                        idx : out LayerIndex);
     --
     overriding
-    procedure Del_Layer(net : in out NNet; idx : NN.LayerIndex);
+    procedure Del_Layer(net : in out NNet; idx : LayerIndex);
 
     overriding
-    function  Layer(net : aliased in out NNet; idx : NN.LayerIndex) return PL.Layer_Reference;
+    function  Layer(net : aliased in out NNet; idx : LayerIndex) return PL.Layer_Reference;
 
     overriding
-    function  Layer(net : NNet; idx : NN.LayerIndex) return PL.Layer_Interface'Class;
+    function  Layer(net : NNet; idx : LayerIndex) return PL.Layer_Interface'Class;
 
     overriding
     function  Layers_Sorted (net : NNet) return Boolean;
@@ -123,7 +119,7 @@ package dynn.nets.vectors is
     -------------------
     -- new methods
     not overriding
-    function Create(Ni : NN.InputIndex; No : NN.OutputIndex) return NNet;
+    function Create(Ni : NNN.InputIndex; No : NNN.OutputIndex) return NNet;
     -- basic constructor
     -- pre-creates given number of (unconnected) inputs and outputs, but no neurons or layers.
 
@@ -137,18 +133,18 @@ private
 
 
     use type PI.Input_Vector;
-    package IV is new Ada.Containers.Vectors(Index_Type=>NN.InputIndex,  Element_Type=>PI.Input_Vector);
+    package IV is new Ada.Containers.Vectors(Index_Type=>NNN.InputIndex,  Element_Type=>PI.Input_Vector);
 
-    use type NN.ConnectionIndex;
-    package OV is new Ada.Containers.Vectors(Index_Type=>NN.OutputIndex, Element_Type=>NN.ConnectionIndex);
+--     use type NN.ConnectionIndex;
+    package OV is new Ada.Containers.Vectors(Index_Type=>NNN.OutputIndex, Element_Type=>ConnectionIndex);
 
     -- utilized vector types
     use type PN.Neuron_Interface;
     package NV is new Ada.Containers.Indefinite_Vectors (
-            Index_Type=>NN.NeuronIndex, Element_Type=>PN.Neuron_Interface'Class);
+            Index_Type=>NNN.NeuronIndex, Element_Type=>PN.Neuron_Interface'Class);
 
     use type PLV.Layer;
-    package LV is new Ada.Containers.Vectors(Index_Type=>NN.LayerIndex,  Element_Type=>PLV.Layer);
+    package LV is new Ada.Containers.Vectors(Index_Type=>LayerIndex,  Element_Type=>PLV.Layer);
 
     -- the NNet types themselves
     type NNet is new PCNV.Connector_Vector with record

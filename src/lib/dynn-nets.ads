@@ -106,11 +106,9 @@ package dynn.nets is
     function  Output(net : NNet_Interface; o : NNN.OutputIndex) return ConnectionIndex is abstract; -- from Connectors
     --
     -- by glocal IDs - NOTE: these might be made class-wide..
-    not overriding
-    function  Input (net : NNet_Interface; i : NNet_InputId)  return PI.Input_Interface'Class is abstract;
+    function  Input (net : NNet_Interface'Class; i : NNet_InputId)  return PI.Input_Interface'Class;
     --     function  Input (net : NNet_Interface'Class; i : NN.InputIndex)  return PI.InputRec;
-    not overriding
-    function  Output(net : NNet_Interface; o : NNet_OutputId) return ConnectionIndex is abstract; -- from Connectors
+    function  Output(net : NNet_Interface'Class; o : NNet_OutputId) return ConnectionIndex; -- from Connectors
 
     --  Neuron handling
     -- NNet is conceptually a container. So we store/remove neurons with Add/Del_Neuron.
@@ -130,7 +128,7 @@ package dynn.nets is
 
     -- neuron accessor
     function  Neuron(net : aliased in out NNet_Interface; idx : NNN.NeuronIndex) return PN.Neuron_Reference is abstract;
-    function  Neuron(net : aliased in out NNet_Interface; idx : NNet_NeuronId)   return PN.Neuron_Reference is abstract;
+    function  Neuron(net : aliased in out NNet_Interface'Class; idx : NNet_NeuronId)   return PN.Neuron_Reference;
         -- this provides read-write access via Accessor trick
     --function  Neuron(net : NNet_Interface; idx : NN.NeuronIndex) return PN.Neuron_Interface'Class is abstract;
         -- this provides read-only access, passing by reference (tagged record)

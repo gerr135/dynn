@@ -47,8 +47,6 @@ package dynn.layers.vectors is
 
     overriding
     function  Neuron(L : Layer; idx : NeuronIndex)   return PN.NeuronClass_Access;
-    overriding
-    function  Neuron(L : Layer; idx : NNet_NeuronId) return PN.NeuronClass_Access;
     --     procedure SetNeuron(LI : Layer_Interface; idx : NeuronIndex; np : PN.Neuron_Access) is abstract;
 
 --     not overriding
