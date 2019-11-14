@@ -166,19 +166,19 @@ package dynn is
 
 
 
---     function  Get_Value(SV : NN.State_Vector; idx : NN.ConnectionIndex)
+--     function  Get_Value(SV : NN.State_Vector; idx : ConnectionIndex)
 --         return Real with Inline;
 --     --
---     procedure Set_Value(SV : in out NN.State_Vector; idx : NN.ConnectionIndex;
+--     procedure Set_Value(SV : in out NN.State_Vector; idx : ConnectionIndex;
 --                         value : Real) with Inline;
 --     --
---     function Is_Valid(SV : NN.Checked_State_Vector; idx : NN.ConnectionIndex)
+--     function Is_Valid(SV : NN.Checked_State_Vector; idx : ConnectionIndex)
 --         return Boolean with Inline;
 --     --
---     function  Get_Value(SV : NN.Checked_State_Vector; idx : NN.ConnectionIndex)
+--     function  Get_Value(SV : NN.Checked_State_Vector; idx : ConnectionIndex)
 --         return Real with Inline;
 --     --
---     procedure Set_Value(SV : in out NN.Checked_State_Vector; idx : NN.ConnectionIndex;
+--     procedure Set_Value(SV : in out NN.Checked_State_Vector; idx : ConnectionIndex;
 --                         value : Real) with Inline;
 
 end dynn;

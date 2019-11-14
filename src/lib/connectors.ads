@@ -7,7 +7,7 @@
 -- In case of Neurons a single output is connected to multiple other entities (neurons or outputs).
 -- In the case of NNet, single NNet input can be connected to multiple neurons
 -- (or even outputs directly, in a pass-thrugh configuration).
--- So, in either case, its NN.Connection_Index on the other side..
+-- So, in either case, its ConnectionIndex on the other side..
 --
 -- NOTE: this only handles common code for the "container" itself - add/delete/assign, etc.
 -- Any adjustment on the other side needs to be done in derived methods, as only actual neuons/nets

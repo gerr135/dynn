@@ -171,7 +171,7 @@ package body dynn.nets is
                -- go over las layer outputs and add them to the next layer..
                 declare
                     Next_Layer : PL.Layer_Interface'Class := net.LG.all;
-                    connection : NN.ConnectionIndex;
+                    connection : ConnectionIndex;
                     use type NN.Connection_Type;
                 begin
                     -- go over inputs and add all their connections to L1
@@ -275,7 +275,7 @@ package body dynn.nets is
     begin
         for o in results'Range loop
             declare
-                output : NN.ConnectionIndex := net.Output(o);
+                output : ConnectionIndex := net.Output(o);
             begin
                 if output.T = NN.N then
                     if not NSV.validN(output.Nidx) then
@@ -304,7 +304,7 @@ package body dynn.nets is
     begin
         for o in results'Range loop
             declare
-                output : NN.ConnectionIndex := net.Output(o);
+                output : ConnectionIndex := net.Output(o);
             begin
                 if output.T = NN.N then
                     results(o) := NSV.neuron(output.Nidx);
@@ -357,7 +357,7 @@ package body dynn.nets is
     begin
         for o in results'Range loop
             declare
-                output : NN.ConnectionIndex := net.Output(o);
+                output : ConnectionIndex := net.Output(o);
             begin
                 if output.T = NN.N then
                     neur := net.Neuron(output.Nidx);

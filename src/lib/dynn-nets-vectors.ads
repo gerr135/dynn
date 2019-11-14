@@ -135,7 +135,7 @@ private
     use type PI.Input_Vector;
     package IV is new Ada.Containers.Vectors(Index_Type=>NNN.InputIndex,  Element_Type=>PI.Input_Vector);
 
---     use type NN.ConnectionIndex;
+--     use type ConnectionIndex;
     package OV is new Ada.Containers.Vectors(Index_Type=>NNN.OutputIndex, Element_Type=>ConnectionIndex);
 
     -- utilized vector types

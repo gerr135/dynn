@@ -67,7 +67,7 @@ package dynn.neurons.vectors is
 private
 
     -- needed vector types
---     use type NN.ConnectionIndex;
+--     use type ConnectionIndex;
     package IV is new Ada.Containers.Vectors(Index_Type=>InputIndex,  Element_Type=>ConnectionIndex);
     package OV is new Ada.Containers.Vectors(Index_Type=>OutputIndex, Element_Type=>ConnectionIndex);
     package WV is new Ada.Containers.Vectors(Index_Type=>InputIndex_Base, Element_Type=>Real);

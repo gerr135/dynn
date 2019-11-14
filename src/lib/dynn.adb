@@ -5,12 +5,12 @@ package body dynn is
     -- State_Value --
     -----------------
 
-    function Get_Value (SV : NN.State_Vector; idx : NN.ConnectionIndex) return Real is
+    function Get_Value (SV : NN.State_Vector; idx : ConnectionIndex) return Real is
     begin
         return NN.State_Value(SV, idx);
     end Get_Value;
 
-    procedure Set_Value(SV : in out NN.State_Vector; idx : NN.ConnectionIndex; value : Real) is
+    procedure Set_Value(SV : in out NN.State_Vector; idx : ConnectionIndex; value : Real) is
         use NN;
     begin
         case idx.T is
@@ -25,7 +25,7 @@ package body dynn is
     -- Is_Valid --
     --------------
 
-    function Is_Valid (SV : NN.Checked_State_Vector; idx : NN.ConnectionIndex) return Boolean is
+    function Is_Valid (SV : NN.Checked_State_Vector; idx : ConnectionIndex) return Boolean is
     begin
         return NN.Is_Valid(SV, idx);
     end Is_Valid;
@@ -34,7 +34,7 @@ package body dynn is
     -- State_Value --
     -----------------
 
-    function Get_Value (SV : NN.Checked_State_Vector; idx : NN.ConnectionIndex) return Real is
+    function Get_Value (SV : NN.Checked_State_Vector; idx : ConnectionIndex) return Real is
         use NN;
     begin
         if Is_Valid(SV, idx) then
@@ -49,7 +49,7 @@ package body dynn is
         end if;
     end Get_Value;
 
-    procedure Set_Value(SV : in out NN.Checked_State_Vector; idx : NN.ConnectionIndex; value : Real) is
+    procedure Set_Value(SV : in out NN.Checked_State_Vector; idx : ConnectionIndex; value : Real) is
         use NN;
     begin
         case idx.T is

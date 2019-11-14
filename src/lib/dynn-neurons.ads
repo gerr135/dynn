@@ -95,8 +95,8 @@ package dynn.neurons is
 --     -- Outputs, on the other hand, are not part of primitive Rec,
 --     -- and will need to be reset individually during rearrangement, so need some primitives for these..
 --     -- The principal users should be Layer or NNet while adding/removeing/reconnecting neurons
---     procedure Add_Output(NI : in out Neuron_Interface; Output : NN.ConnectionIndex) is abstract;
---     procedure Del_Output(NI : in out Neuron_Interface; Output : NN.ConnectionIndex) is abstract;
+--     procedure Add_Output(NI : in out Neuron_Interface; Output : ConnectionIndex) is abstract;
+--     procedure Del_Output(NI : in out Neuron_Interface; Output : ConnectionIndex) is abstract;
 
     -- primitives giving access to commonnly used fields/methods
     -- Input handling, same interface layout as for Connector_Interface
