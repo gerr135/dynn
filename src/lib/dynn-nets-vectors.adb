@@ -56,28 +56,19 @@ package body dynn.nets.vectors is
         use type Ada.Containers.Count_Type;
     begin
         -- generate new index
-        pragma Compile_Time_Warning (Standard.True, "algorythmic TODO item");
-        raise Program_Error with "Unimplemented lookup of free NeuronId";
-        idx := NNet_NeuronId(net.neurons.Length + 1); -- new index - need algorithm to lookup free NeuronId
+        idx := net.Get_Free_NeuronId;
         GT.Trace(Debug, "net.Add_Neuron" & int(idx)'Img);
         -- set generated idx in neuron and add it to the NNet container
         neur.Set_Index(idx);
         net.neurons.Append(neur);
         -- now connect neuron inputs to outputs of other entities that are already in NNet
-        pragma Compile_Time_Warning (Standard.True, "rewrite below as iterator for input of neur.Inputs loop");
-        -- this will also prevent the name clashing with I,N, etc..
-        for i in 1 .. neur.NInputs loop
-            declare
-                input : ConnectionIndex := neur.Input(i);
-            begin
-                GT.Trace(Debug, "  adding input" & i'Img
-                         & "  (" & Con2Str(input) & ")");
-                case input.T is
-                    when dynn.I => net.inputs (input.Iidx).Add_and_Connect((N,idx));
-                    when dynn.N => net.neurons(input.Nidx).Add_and_Connect((N,idx));
-                    when dynn.O | None => raise Invalid_Connection;
-                end case;
-            end;
+        for input : ConnectionIndex of neur.Inputs loop
+            GT.Trace(Debug, "  adding input  (" & Con2Str(input) & ")");
+            case input.T is
+                when dynn.I => net.input (input.Iidx).Add_and_Connect((N,idx));
+                when dynn.N => net.neuron(input.Nidx).Add_and_Connect((N,idx));
+                when dynn.O | None => raise Invalid_Connection;
+            end case;
         end loop;
         -- check if we autosort layers
         if net.autosort_layers then
@@ -91,27 +82,19 @@ package body dynn.nets.vectors is
         self : ConnectionIndex := (N, idx);
     begin
         -- first disconnect the connections
-        for i in 1 .. neur.NInputs loop
-            declare
-                input : ConnectionIndex := neur.Input(i);
-            begin
-                case input.T is
-                    when dynn.I => net.inputs (input.Iidx).Del_Output(self);
-                    when dynn.N => net.neurons(input.Nidx).Del_Output(self);
-                    when dynn.O | None => raise Invalid_Connection;
-                end case;
-            end;
+        for input : ConnectionIndex of neur.Inputs loop
+            case input.T is
+                when dynn.I => net.input (input.Iidx).Del_Output(self);
+                when dynn.N => net.neuron(input.Nidx).Del_Output(self);
+                when dynn.O | None => raise Invalid_Connection;
+            end case;
         end loop;
-        for o in 1 .. neur.NOutputs loop
-            declare
-                output : ConnectionIndex := neur.Output(o);
-            begin
-                case output.T is
-                    when dynn.I | None => raise Invalid_Connection;
-                    when dynn.N => net.neurons(output.Nidx).Del_Input(self);
-                    when dynn.O => net.outputs(output.Oidx) := (T => None);
-                end case;
-            end;
+        for output : ConnectionIndex of neur.Outputs loop
+            case output.T is
+                when dynn.I | None => raise Invalid_Connection;
+                when dynn.N => net.neuron(output.Nidx).Del_Input(self);
+                when dynn.O => net.output(output.Oidx) := (T => None);
+            end case;
         end loop;
         -- Now for the tricky part
         -- Need to delete the neuron
@@ -253,8 +236,8 @@ package body dynn.nets.vectors is
         -- but we have to set both sides of a connection
         net.outputs.Replace_Element(idx, val);  -- direct assignment raises "discriminant check failed" here..
         case val.T is
-            when I => net.inputs (val.Iidx).Add_and_Connect((O,idx));
-            when N => net.neurons(val.Nidx).Add_and_Connect((O,idx));
+            when I => net.input (val.Iidx).Add_and_Connect((O,idx));
+            when N => net.neuron(val.Nidx).Add_and_Connect((O,idx));
             when O | None => raise Invalid_Connection;
         end case;
     end;

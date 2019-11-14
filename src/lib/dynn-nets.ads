@@ -198,6 +198,8 @@ package dynn.nets is
     -- Add_Neuron discarding idx
     procedure Add_Neuron(net : in out NNet_Interface'Class; neur : in out PN.Neuron_Interface'Class);
 
+    function Get_Free_NeuronId(net : NNet_Interface'Class) return NNet_NeuronId;
+
     -- readers from various formats
     -- should take the form:
     procedure Construct_From(net : in out NNet_Interface'Class; S : String);
