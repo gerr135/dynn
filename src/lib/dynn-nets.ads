@@ -156,40 +156,6 @@ package dynn.nets is
                                   Direction : Sort_Direction := Forward);
 
 
-    --------------------------------------------------------------------------------------------------
-    --------------------
-    --  "cached" nnet
-    --  Stores neuron outputs in a state vector, uses base stateless neurons
-    type Cached_NNet_Interface is abstract new NNet_Interface with private;
-    type Cached_NNet_Access    is access Cached_NNet_Interface;
-
-    function  State(net : Cached_NNet_Interface) return NNN.State_Vector  is abstract;
-    procedure Set_State(net : in out Cached_NNet_Interface; NSV : NNN.State_Vector) is abstract;
-    -- NOTE: GetInputValues should raise  UnsetValueAccess if called before SetInputValues
-
-    type Cached_Checked_NNet_Interface is abstract new NNet_Interface with private;
-    type Cached_Checked_NNet_Access    is access Cached_NNet_Interface;
-
-    function  State(net : Cached_Checked_NNet_Interface) return NNN.Checked_State_Vector  is abstract;
-    procedure Set_State(net : in out Cached_Checked_NNet_Interface; NSV : NNN.Checked_State_Vector) is abstract;
-    -- NOTE: GetInputValues should raise  UnsetValueAccess if called before SetInputValues
-
-    --------------------
-    --  Stateful nnet
-    --  Stores neuron outputs in neurons themselves, uses stateful neurons
-    type Stateful_NNet_Interface is abstract new NNet_Interface with private;
-    type Stateful_NNet_Access    is access Stateful_NNet_Interface;
-
-    function  Input_Values(net : Stateful_NNet_Interface) return NNN.Input_Array is abstract;
-    procedure Set_Input_Values(net : in out Stateful_NNet_Interface; IV : NNN.Input_Array) is abstract;
-    --
-    function  Neuron(net : Stateful_NNet_Interface; idx : NNN.NeuronIndex) return PN.Stateful_NeuronClass_Access is abstract;
-    function  Neuron(net : Stateful_NNet_Interface; idx : NNet_NeuronId)   return PN.Stateful_NeuronClass_Access is abstract;
-    procedure Add_Neuron(net  : in out Stateful_NNet_Interface;
-                         neur : in out PN.Stateful_Neuron_Interface'Class; -- pass pre-created Neuron
-                         idx : out NNet_NeuronId) is abstract;
-
-
 
     -----------------------------------------
     -- class-wide stuff
@@ -263,28 +229,6 @@ package dynn.nets is
     --
     function  Calc_Outputs(net : NNet_Interface'Class; NSV : NNN.Checked_State_Vector) return NNN.Output_Array;
     function  Calc_Outputs(net : NNet_Interface'Class; NSV : NNN.State_Vector) return NNN.Output_Array;
-
-    --  Cached NNet propagation
-    --  initial values should be set first with Set_Input_Values and then advanced within net,
-    --  no need for passing around intermediate inputs/outputs
-    --
-    -- first Unchecked version
-    function  Input_Values(net : Cached_NNet_Interface'Class) return NNN.Input_Array;
-    --
-    procedure Set_Input_Values(net : in out Cached_NNet_Interface'Class; IV : NNN.Input_Array);
-    --
-    procedure Prop_Forward(net : Cached_NNet_Interface'Class);
-    --
-    function  Calc_Outputs(net : Stateful_NNet_Interface'Class) return NNN.Output_Array;
-
-    --  Checked version
-    function  Input_Values(net : Cached_Checked_NNet_Interface'Class) return NNN.Input_Array;
-    --
-    procedure Set_Input_Values(net : in out Cached_Checked_NNet_Interface'Class; IV : NNN.Input_Array);
-    --
-    procedure Prop_Forward(net : Cached_Checked_NNet_Interface'Class);
-    --
-    function  Calc_Outputs(net : Cached_Checked_NNet_Interface'Class) return NNN.Output_Array;
 
 
 private
