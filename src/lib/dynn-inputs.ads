@@ -37,12 +37,12 @@ package dynn.inputs is
     type Output_Connection_Array is array (OutputIndex range <>) of ConnectionIndex;
 
 
-    -------------------------------------------------
-    -- Input representation
-    type InputRec(No : OutputIndex) is record
-        idx     : Nnet_InputId; -- own index in NNet
-        outputs : Output_Connection_Array (1 .. No);
-    end record;
+--     -------------------------------------------------
+--     -- Input representation
+--     type InputRec(No : OutputIndex) is record
+--         idx     : Nnet_InputId; -- own index in NNet
+--         outputs : Output_Connection_Array (1 .. No);
+--     end record;
 
 --     type InputRec_array is array (OutputIndex range <>) of InputRec;
 
@@ -57,6 +57,9 @@ package dynn.inputs is
 
     type Input_Interface is interface and PCI.Connector_Interface;
 
+    type Input_Reference (Data : not null access Input_Interface'Class) is private
+        with Implicit_Dereference => Data;
+
     type MyBase is abstract tagged null record;
     package PCIV is new PCI.vectors(Base=>MyBase);
     type Input_Vector is new PCIV.Connector_Vector and Input_Interface with private;
@@ -69,5 +72,7 @@ private
     type Input_Vector is new PCIV.Connector_Vector and Input_Interface with record
         idx     : Nnet_InputId;
     end record;
+
+    type Input_Reference (Data : not null access Input_Interface'Class) is null record;
 
 end dynn.inputs;

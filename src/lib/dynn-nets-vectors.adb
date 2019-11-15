@@ -34,15 +34,18 @@ package body dynn.nets.vectors is
     -- IO handling
     --
     overriding
-    function  Input (net : NNet; i : NNN.InputIndex)  return PI.Input_Interface'Class is
+    function  Input (net : aliased in out NNet; i : NNN.InputIndex)  return PI.Input_Reference is
+        IVR : IV.Reference_Type := net.inputs.Reference(i);
+        IR  : PI.Input_Reference(IVR.Element);
     begin
-        return net.inputs(i);
+        return IR;
     end;
 
     overriding
-    function  Output(net : NNet; o : NNN.OutputIndex) return ConnectionIndex is
+    function  Output(net : aliased in out NNet; o : NNN.OutputIndex) return Connection_Reference is
+        OVR : OV.Reference_Type := net.outputs.Reference(o);
     begin
-        return net.outputs(o);
+        return OVR.Element;
     end;
 
     --------------------

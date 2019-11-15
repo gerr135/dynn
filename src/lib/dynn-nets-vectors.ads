@@ -65,10 +65,10 @@ package dynn.nets.vectors is
 
     -- IO handling --
     overriding
-    function  Input (net : NNet; i : NNN.InputIndex) return PI.Input_Interface'Class;
+    function  Input (net : aliased in out NNet; i : NNN.InputIndex) return PI.Input_Reference;
 
     overriding
-    function  Output(net : NNet; o : NNN.OutputIndex) return ConnectionIndex;
+    function  Output(net : aliased in out NNet; o : NNN.OutputIndex) return Connection_Reference;
 
     -- this version also has mutable IO, so we need methods to add/remore inputs and outputs
     not overriding

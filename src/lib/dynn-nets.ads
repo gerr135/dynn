@@ -99,16 +99,16 @@ package dynn.nets is
     --
     -- So we access by element instead
     -- by internal indices
---     not overriding
-    function  Input (net : NNet_Interface; i : NNN.InputIndex)  return PI.Input_Interface'Class is abstract;
+    not overriding
+    function  Input (net : aliased in out NNet_Interface; i : NNN.InputIndex)  return PI.Input_Reference is abstract;
     --     function  Input (net : NNet_Interface'Class; i : NN.InputIndex)  return PI.InputRec;
---     overriding
+    overriding
     function  Output(net : NNet_Interface; o : NNN.OutputIndex) return ConnectionIndex is abstract; -- from Connectors
     --
     -- by glocal IDs - NOTE: these might be made class-wide..
-    function  Input (net : NNet_Interface'Class; i : NNet_InputId)  return PI.Input_Interface'Class;
+    function  Input (net : aliased in out NNet_Interface'Class; i : NNet_InputId)  return PI.Input_Reference;
     --     function  Input (net : NNet_Interface'Class; i : NN.InputIndex)  return PI.InputRec;
-    function  Output(net : NNet_Interface'Class; o : NNet_OutputId) return ConnectionIndex; -- from Connectors
+    function  Output(net : NNet_Interface'Class; o : NNet_OutputId) return ConnectionIndex;
 
     --  Neuron handling
     -- NNet is conceptually a container. So we store/remove neurons with Add/Del_Neuron.
