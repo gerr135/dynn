@@ -12,11 +12,11 @@ package body dynn.nets.vectors is
         return NNN.InputIndex_Base(net.inputs.Length);
     end;
 
-    overriding
-    function NOutputs(net : NNet) return NNN.OutputIndex_Base is
-    begin
-        return NNN.OutputIndex_Base(net.outputs.Length);
-    end;
+--     overriding
+--     function NOutputs(net : NNet) return NNN.OutputIndex_Base is
+--     begin
+--         return NNN.OutputIndex_Base(net.outputs.Length);
+--     end;
 
     overriding
     function NNeurons (net : NNet) return NNN.NeuronIndex is
@@ -41,12 +41,12 @@ package body dynn.nets.vectors is
         return IR;
     end;
 
-    overriding
-    function  Output(net : aliased in out NNet; o : NNN.OutputIndex) return Connection_Reference is
-        OVR : OV.Reference_Type := net.outputs.Reference(o);
-    begin
-        return OVR.Element;
-    end;
+--     overriding
+--     function  Get_Output(net : aliased in out NNet; o : NNN.OutputIndex) return Connection_Reference is
+--         OVR : OV.Reference_Type := net.outputs.Reference(o);
+--     begin
+--         return OVR.Element;
+--     end;
 
     --------------------
     -- Neurons handling
@@ -96,7 +96,7 @@ package body dynn.nets.vectors is
             case output.T is
                 when dynn.I | None => raise Invalid_Connection;
                 when dynn.N => net.neuron(output.Nidx).Del_Input(self);
-                when dynn.O => net.output(output.Oidx) := (T => None);
+                when dynn.O => net.Set_Output(output.Oidx, (T => None)); -- needs fixing addressing
             end case;
         end loop;
         -- Now for the tricky part
@@ -187,11 +187,11 @@ package body dynn.nets.vectors is
     not overriding
     function Create(Ni : NNN.InputIndex; No : NNN.OutputIndex) return NNet is
         emptyInput  : PI.Input_Vector;
-        emptyOutput : ConnectionIndex := (T=>None);
+--         emptyOutput : ConnectionIndex := (T=>None);
     begin
         return net : NNet do
             net.inputs.Append(emptyInput, Ada.Containers.Count_Type(Ni));
-            net.outputs.Append(emptyOutput, Ada.Containers.Count_Type(No));
+            net.Add_Output(No);
             -- the rest of fields are autoinit to proper (emty vector) values
         end return;
     end;
@@ -225,22 +225,23 @@ package body dynn.nets.vectors is
         raise Program_Error with "Unimplemented procedure Del_Input";
     end;
 
-    overriding
-    procedure Add_Output(net : in out NNet; N : NNN.OutputIndex := 1) is
-        emptyOutput  : ConnectionIndex := (T=>None);
-    begin
-        net.outputs.Append(emptyOutput, Ada.Containers.Count_Type(N));
-    end;
+--     overriding
+--     procedure Add_Output(net : in out NNet; N : NNN.OutputIndex := 1) is
+--         emptyOutput  : ConnectionIndex := (T=>None);
+--     begin
+--         net.outputs.Append(emptyOutput, Ada.Containers.Count_Type(N));
+--     end;
 
     overriding
-    procedure Connect_Output(net : in out NNet; idx : NNN.OutputIndex; val : ConnectionIndex) is
+    procedure Set_Output(net : in out NNet; idx : NNN.OutputIndex; val : ConnectionIndex) is
     begin
         -- A NNet output takes signal from a single neuron or input
         -- but we have to set both sides of a connection
-        net.outputs.Replace_Element(idx, val);  -- direct assignment raises "discriminant check failed" here..
+        PCNV.Connector_Vector(net).Set_Output(idx, val); -- call inherited method
+--         net.outputs.Replace_Element(idx, val);  -- direct assignment raises "discriminant check failed" here.. - because this is wrong..
         case val.T is
-            when I => net.input (val.Iidx).Add_and_Connect((O,idx));
-            when N => net.neuron(val.Nidx).Add_and_Connect((O,idx));
+            when I => net.input (val.Iidx).Add_and_Connect((O,idx)); -- fix addressing
+            when N => net.neuron(val.Nidx).Add_and_Connect((O,idx)); -- fix addressing
             when O | None => raise Invalid_Connection;
         end case;
     end;

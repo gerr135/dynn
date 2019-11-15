@@ -164,8 +164,8 @@ package dynn is
 
     function Con2Str(connection : ConnectionIndex) return String;
 
-    type Connection_Reference (Data : not null access ConnectionIndex) is private
-            with Implicit_Dereference => Data;
+--     type Connection_Reference (Data : not null access ConnectionIndex) is private
+--             with Implicit_Dereference => Data;
 
 --     function  Get_Value(SV : NN.State_Vector; idx : ConnectionIndex)
 --         return Real with Inline;

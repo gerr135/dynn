@@ -84,8 +84,8 @@ package dynn.nets is
     -- Dimension getters; the setters are imnplementation-specific
     not overriding
     function NInputs (net : NNet_Interface) return NNN.InputIndex_Base  is abstract;
-    overriding  -- from Connectors
-    function NOutputs(net : NNet_Interface) return NNN.OutputIndex_Base is abstract;
+--     overriding  -- defined in Connectors
+--     function NOutputs(net : NNet_Interface) return NNN.OutputIndex_Base is abstract;
     not overriding
     function NNeurons(net : NNet_Interface) return NNN.NeuronIndex is abstract;
     not overriding
@@ -103,12 +103,12 @@ package dynn.nets is
     function  Input (net : aliased in out NNet_Interface; i : NNN.InputIndex)  return PI.Input_Reference is abstract;
     --     function  Input (net : NNet_Interface'Class; i : NN.InputIndex)  return PI.InputRec;
     overriding
-    function  Output(net : NNet_Interface; o : NNN.OutputIndex) return ConnectionIndex is abstract; -- from Connectors
+    function  Get_Output(net : NNet_Interface; o : NNN.OutputIndex) return ConnectionIndex is abstract; -- from Connectors, explicit visualize
     --
     -- by glocal IDs - NOTE: these might be made class-wide..
     function  Input (net : aliased in out NNet_Interface'Class; i : NNet_InputId)  return PI.Input_Reference;
     --     function  Input (net : NNet_Interface'Class; i : NN.InputIndex)  return PI.InputRec;
-    function  Output(net : NNet_Interface'Class; o : NNet_OutputId) return ConnectionIndex;
+    function  Get_Output(net : NNet_Interface'Class; o : NNet_OutputId) return ConnectionIndex;
 
     --  Neuron handling
     -- NNet is conceptually a container. So we store/remove neurons with Add/Del_Neuron.

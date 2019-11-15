@@ -31,14 +31,13 @@ package connectors.vectors is
     function NOutputs(OI : Connector_Vector) return Index_Base;
 
     overriding
-    function Output  (OI : Connector_Vector; idx : Index_Type) return Connection_Type;
-    --
-    -- setters
-    overriding
     procedure Add_Output(OI : in out Connector_Vector; N : Index_Type := 1);
 
     overriding
-    procedure Connect_Output(OI : in out Connector_Vector; idx : Index_Type; val : Connection_Type);
+    function  Get_Output  (OI : Connector_Vector; idx : Index_Type) return Connection_Type;
+
+    overriding
+    procedure Set_Output(OI : in out Connector_Vector; idx : Index_Type; val : Connection_Type);
 
     overriding
     procedure Del_Output(OI : in out Connector_Vector; Output : Connection_Type);
@@ -59,6 +58,6 @@ private
         outputs : CV.Vector;
     end record;
 
-    pragma Inline(NOutputs, Output);
+    pragma Inline(NOutputs, Get_Output);
 
 end connectors.vectors;

@@ -8,7 +8,7 @@ package body connectors.vectors is
     end NOutputs;
 
     overriding
-    function Output (OI : Connector_Vector; idx : Index_Type) return Connection_Type is
+    function Get_Output (OI : Connector_Vector; idx : Index_Type) return Connection_Type is
     begin
         return OI.outputs(idx);
     end Output;
@@ -23,7 +23,7 @@ package body connectors.vectors is
     end Add_Output;
 
     overriding
-    procedure Connect_Output(OI : in out Connector_Vector; idx : Index_Type; val : Connection_Type) is
+    procedure Set_Output(OI : in out Connector_Vector; idx : Index_Type; val : Connection_Type) is
     begin
         -- need to ensure that passed connection is not a duplicate of already attached one
         -- (except the one at idx)

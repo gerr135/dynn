@@ -39,14 +39,17 @@ package Connectors is
 
     -- Output handling primitives. Only handle internals.
     -- The other side (connecting/disconnecting) is responsibility of the calling entity..
-    function NOutputs(OI : Connector_Interface) return Index_Base is abstract;
-    function Output  (OI : Connector_Interface; idx :  Index_Type) return Connection_Type is abstract;
-
+    function NOutputs  (OI : Connector_Interface) return Index_Base is abstract;
     -- general use case is to pre-create neuron/net with given amount of connections
     -- so we need separate Add_ and Connect_ methods
     procedure Add_Output(OI : in out Connector_Interface; N : Index_Type := 1) is abstract;
 
-    procedure Connect_Output(OI : in out Connector_Interface;
+    -- NOTE: unlike Inputs and other things, setting/connecting outputs is not a trivial assignment
+    -- as we do not allow duplicate connections. So we cannot simply "pass the reference",
+    -- we need actual getter and setter..
+    function  Get_Output(OI : Connector_Interface; idx :  Index_Type) return Connection_Type is abstract;
+
+    procedure Set_Output(OI : in out Connector_Interface;
                              idx : Index_Type;      -- which output
                              val : Connection_Type  -- to where
                             ) is abstract;

@@ -54,8 +54,8 @@ package dynn.nets.vectors is
     overriding
     function NInputs (net : NNet) return NNN.InputIndex_Base;
 
-    overriding
-    function NOutputs(net : NNet) return NNN.OutputIndex_Base;
+--     overriding
+--     function NOutputs(net : NNet) return NNN.OutputIndex_Base;
 
     overriding
     function NNeurons(net : NNet) return NNN.NeuronIndex;
@@ -67,8 +67,8 @@ package dynn.nets.vectors is
     overriding
     function  Input (net : aliased in out NNet; i : NNN.InputIndex) return PI.Input_Reference;
 
-    overriding
-    function  Output(net : aliased in out NNet; o : NNN.OutputIndex) return Connection_Reference;
+--     overriding
+--     function  Get_Output(net : NNet; o : NNN.OutputIndex) return ConnectionIndex;
 
     -- this version also has mutable IO, so we need methods to add/remore inputs and outputs
     not overriding
@@ -78,11 +78,11 @@ package dynn.nets.vectors is
     not overriding
     procedure Del_Input(net : in out NNet; idx : NNN.InputIndex);
 
-    overriding
-    procedure Add_Output(net : in out NNet; N : NNN.OutputIndex := 1);
+--     overriding
+--     procedure Add_Output(net : in out NNet; N : NNN.OutputIndex := 1);
 
     overriding
-    procedure Connect_Output(net : in out NNet; idx : NNN.OutputIndex; val : ConnectionIndex);
+    procedure Set_Output(net : in out NNet; idx : NNN.OutputIndex; val : ConnectionIndex); -- from in connectors.vectors
 
     overriding
     procedure Del_Output(net : in out NNet; Output : ConnectionIndex);
@@ -136,7 +136,7 @@ private
     package IV is new Ada.Containers.Vectors(Index_Type=>NNN.InputIndex,  Element_Type=>PI.Input_Vector);
 
 --     use type ConnectionIndex;
-    package OV is new Ada.Containers.Vectors(Index_Type=>NNN.OutputIndex, Element_Type=>ConnectionIndex);
+--     package OV is new Ada.Containers.Vectors(Index_Type=>NNN.OutputIndex, Element_Type=>ConnectionIndex);
 
     -- utilized vector types
     use type PN.Neuron_Interface;
@@ -149,7 +149,7 @@ private
     -- the NNet types themselves
     type NNet is new PCNV.Connector_Vector with record
         inputs  : IV.Vector;
-        outputs : OV.Vector;
+--         outputs : OV.Vector; -- outputs are inherited from connectors.Connector_Vector
         neurons : NV.Vector;
         layers  : LV.Vector;
         Layers_Ready : Boolean := False;
