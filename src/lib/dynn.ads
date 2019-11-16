@@ -50,13 +50,13 @@
 -- Use renames to access already instantiated packages!!!
 -- Thus, e.g.:
 --  NN is instantiated right here, at top level, and used throughout
---    (it is visible by anything using top level wann.ads - i.e. everything).
+--    (it is visible by anything using top level dynn.ads - i.e. everything).
 --  PN is instantiated in PL and then PL.PN is renamed to PN where necessary..
 --------------------------------------------------------------------------
 
 with GNATCOLL.Traces;
 
-with nnet_types;
+-- with nnet_types;
 
 generic
     type Real is digits <>;
@@ -88,8 +88,6 @@ package dynn is
     --  trying to make connection that obviously makes no sense
     --  (connect neuron input to net output, etc..)
 
-    package NN is new nnet_types(Real);
-
     ------------------------------------------------------------
     -- Some common types; basic and not requiring special naming
     --
@@ -107,19 +105,68 @@ package dynn is
     type Sort_Direction is (Forward, Backward);
 
 
-    function  Get_Value(SV : NN.State_Vector; idx : NN.ConnectionIndex)
-        return Real with Inline;
+
+--     package NNN is new nnet_types(Real);
+
+    --------------------------------------------------------------
+    -- global NNet component addressing
+    -- all Id types share functionality, so define a common root type
+    package Component_Id is
+        -- as we are going to derive from it, we need it to be complete at the point
+        -- of derivation - thus a separate package..
+
+        -- Ids are mapping on Integers, numbering from 1, 0 denotes null entry.
+        -- There may be holes (due to deletions), so only equiality and int conversions are provided.
+        --
+        -- Ordering by Nnet topology might makie sense, but that can only done at the NNet level..
+
+        type Id_Type is private;
+        Null_Id : constant Id_Type;
+
+        function "+"(int : Natural) return Id_Type;
+        function int(cId : Id_Type) return Natural;
+        function "="(Left : Integer; Right : Id_Type) return Boolean;
+        function "="(Left : Id_Type; Right : Integer) return Boolean;
+
+    private
+
+        type Id_Type is new Natural;
+        Null_Id : constant Id_Type := 0;
+    end Component_Id;
+
+    -- Now the indices themselves
+    type InputId  is new Component_Id.Id_Type;
+    type OutputId is new Component_Id.Id_Type;
+    type NeuronId is new Component_Id.Id_Type;
+    -- type LayerId  is new Component_Id.Id_Type; - no sense:
+    --  layers are autocreated/updated on sort, and are going *in sequence* always
+    --  So, Layers should be indexed (with random access and sequential iteration), not Id'd..
+
+
+    --------------------------------------------------
+    -- Topology
+    -- Types for keeping/passing around connection info
     --
-    procedure Set_Value(SV : in out NN.State_Vector; idx : NN.ConnectionIndex;
-                        value : Real) with Inline;
+    -- The neuron inter-connection type
+    type Connection_Type is (I, O, N, None);
+    -- Input, Output, Neuron, but intended to be used in constructs throughout, so shortening down
     --
-    function Is_Valid(SV : NN.Checked_State_Vector; idx : NN.ConnectionIndex)
-        return Boolean with Inline;
-    --
-    function  Get_Value(SV : NN.Checked_State_Vector; idx : NN.ConnectionIndex)
-        return Real with Inline;
-    --
-    procedure Set_Value(SV : in out NN.Checked_State_Vector; idx : NN.ConnectionIndex;
-                        value : Real) with Inline;
+    type Connection_Index(T : Connection_Type := None) is record
+        case T is
+            when None => Null;
+            when I => Iidx : NNet_InputId;
+            when N => Nidx : NNet_NeuronId;
+            when O => Oidx : NNet_OutputId;
+        end case;
+    end record;
+
+    No_Connection : constant ConnectionIndex := (T => None);
+
+    function Con2Str(connection : ConnectionIndex) return String;
+
+
+private
+
+    type Connection_Reference (Data : not null access ConnectionIndex) is null record;
 
 end dynn;

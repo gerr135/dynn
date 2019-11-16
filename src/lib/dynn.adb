@@ -1,64 +1,42 @@
 pragma Ada_2012;
 package body dynn is
 
-    -----------------
-    -- State_Value --
-    -----------------
-
-    function Get_Value (SV : NN.State_Vector; idx : NN.ConnectionIndex) return Real is
+    function Con2Str(connection : Connection_Index) return String is
+        use Ada.Strings, Ada.Strings.Fixed;
     begin
-        return NN.State_Value(SV, idx);
-    end Get_Value;
+        return connection.T'Img &
+            (case connection.T is
+                when None=> "",
+                when I   => Trim(connection.Iidx'Img, Side => Both),
+                when N   => Trim(connection.Nidx'Img, Side => Both),
+                when O   => Trim(connection.Oidx'Img, Side => Both)
+            );
+    end Con2Str;
 
-    procedure Set_Value(SV : in out NN.State_Vector; idx : NN.ConnectionIndex; value : Real) is
-        use NN;
-    begin
-        case idx.T is
-            when I => SV.input (idx.Iidx) := value;
-            when N => SV.neuron(idx.Nidx) := value;
-            when O => SV.output(idx.Oidx) := value;
-            when None => NUll;
-        end case;
-    end Set_Value;
 
-    --------------
-    -- Is_Valid --
-    --------------
+    package body Component_Id is
 
-    function Is_Valid (SV : NN.Checked_State_Vector; idx : NN.ConnectionIndex) return Boolean is
-    begin
-        return NN.Is_Valid(SV, idx);
-    end Is_Valid;
+        function "+"(int : Natural) return Id_Type is
+        begin
+            return Id_Type(int);
+        end;
 
-    -----------------
-    -- State_Value --
-    -----------------
+        function int(cId : Id_Type) return Natural is
+        begin
+            return Integer(cId);
+        end;
 
-    function Get_Value (SV : NN.Checked_State_Vector; idx : NN.ConnectionIndex) return Real is
-        use NN;
-    begin
-        if Is_Valid(SV, idx) then
-            case idx.T is
-                when I => return SV.input (idx.Iidx);
-                when N => return SV.neuron(idx.Nidx);
-                when O => return SV.output(idx.Oidx);
-                when None => NUll;
-            end case;
-        else
-            raise Unset_Value_Access;
-        end if;
-    end Get_Value;
+        function "="(Left : Integer; Right : Id_Type) return Boolean is
+        begin
+            return Left = Integer(Right);
+        end;
 
-    procedure Set_Value(SV : in out NN.Checked_State_Vector; idx : NN.ConnectionIndex; value : Real) is
-        use NN;
-    begin
-        case idx.T is
-            when I => SV.input (idx.Iidx) := value;
-            when N => SV.neuron(idx.Nidx) := value;
-            when O => SV.output(idx.Oidx) := value;
-            when None => NUll;
-        end case;
-    end Set_Value;
+        function "="(Left : Id_Type; Right : Integer) return Boolean is
+        begin
+            return Integer(Left) = Right;
+        end;
+
+    end Component_Id;
 
 begin
     GT.Parse_Config_File;
