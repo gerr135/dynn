@@ -114,7 +114,7 @@ package dynn is
     package Component_Id is
         -- as we are going to derive from it, we need it to be complete at the point
         -- of derivation - thus a separate package..
-
+        --
         -- Ids are mapping on Integers, numbering from 1, 0 denotes null entry.
         -- There may be holes (due to deletions), so only equiality and int conversions are provided.
         --
