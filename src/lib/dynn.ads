@@ -154,19 +154,19 @@ package dynn is
     type Connection_Index(T : Connection_Type := None) is record
         case T is
             when None => Null;
-            when I => Iidx : NNet_InputId;
-            when N => Nidx : NNet_NeuronId;
-            when O => Oidx : NNet_OutputId;
+            when I => Iidx : InputId;
+            when N => Nidx : NeuronId;
+            when O => Oidx : OutputId;
         end case;
     end record;
 
-    No_Connection : constant ConnectionIndex := (T => None);
+    No_Connection : constant Connection_Index := (T => None);
 
-    function Con2Str(connection : ConnectionIndex) return String;
+    function Con2Str(connection : Connection_Index) return String;
 
 
 private
 
-    type Connection_Reference (Data : not null access ConnectionIndex) is null record;
+    type Connection_Reference (Data : not null access Connection_Index) is null record;
 
 end dynn;

@@ -19,8 +19,8 @@
 --
 
 with dynn.neurons;
-with dynn.layers;
-with dynn.inputs;
+-- with dynn.layers;
+-- with dynn.inputs;
 -- with connectors;
 
 with Ada.Text_IO;
@@ -31,7 +31,7 @@ package dynn.nets is
 --     package PI  is new dynn.inputs;
 --     package PL  is new dynn.layers;
 --     package PN renames PL.PN;
-    --package PN is new dynn.neurons; -- creates new package with new incompatible types
+    package PN is new dynn.neurons; -- creates new package with new incompatible types
 
     -- Unlike inputs, outputs and neurons, layers are *internal* to nnet,
     --  constructed dynamically and processed in order.
@@ -61,7 +61,8 @@ package dynn.nets is
     -- Some of the functionality is common to all, and is easiest to implement right here.
     -- So, like with Layer_Interface we make this one abstract tagged, rather than interface.
     -- We have no need for overlaying hierarchies so far..
-    type NNet_Interface is abstract limited new PCN.Connector_Interface with private;
+--     type NNet_Interface is abstract limited new PCN.Connector_Interface with private;
+    type NNet_Interface is abstract tagged limited private;
     type NNet_Access is access NNet_Interface'Class;
 
 
