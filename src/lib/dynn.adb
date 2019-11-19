@@ -1,4 +1,7 @@
 pragma Ada_2012;
+
+with Ada.Strings.Fixed;
+
 package body dynn is
 
     function Con2Str(connection : Connection_Index) return String is
@@ -7,9 +10,9 @@ package body dynn is
         return connection.T'Img &
             (case connection.T is
                 when None=> "",
-                when I   => Trim(connection.Iidx'Img, Side => Both),
-                when N   => Trim(connection.Nidx'Img, Side => Both),
-                when O   => Trim(connection.Oidx'Img, Side => Both)
+                when I   => Trim(int(connection.Iidx)'Img, Side => Both),
+                when N   => Trim(int(connection.Nidx)'Img, Side => Both),
+                when O   => Trim(int(connection.Oidx)'Img, Side => Both)
             );
     end Con2Str;
 

@@ -43,7 +43,7 @@ package dynn.neurons is
     type Input_Connection_Array  is array (InputIndex  range <>) of Connection_Index;
     type Output_Connection_Array is array (OutputIndex range <>) of Connection_Index;
     type Weight_Array  is array (InputIndex_Base range <>) of Real;
---     type Value_Array   is array (InputIndex range <>) of Real;
+    type Value_Array   is array (InputIndex range <>) of Real;
 --     -- this one is not very useful, as it should be the state of the entire NNet that is propagated.
 --     -- This can be done on per-neuron basis (albeit much less efficiently than per-layer),
 --     -- but that would use the NNet value arrays, as defined in nnet_types.ads
@@ -67,6 +67,13 @@ package dynn.neurons is
     type Neuron_Reference (Data : not null access Neuron_Interface'Class) is private
         with Implicit_Dereference => Data;
 
+    -- primitives
+    function NInputs (neur : Neuron_Interface) return InputIndex  is abstract;
+
+
+    --------------------------------------------
+    -- Utility (class-wide)
+    function Prop_Forward (neur : Neuron_Interface'Class; data  : Value_Array) return Real;
 
 private
 

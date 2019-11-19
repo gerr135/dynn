@@ -25,6 +25,9 @@ package dynn.neurons.vectors is
 
     type Neuron is new Neuron_Interface with private;
 
+    overriding
+    function NInputs (neur : Neuron) return InputIndex ;
+
     ---------------
     -- constructors
     --
@@ -46,20 +49,20 @@ package dynn.neurons.vectors is
 private
 
     -- needed vector types
---     use type ConnectionIndex;
---     package IV is new Ada.Containers.Vectors(Index_Type=>InputIndex,  Element_Type=>Connection_Index);
---     package OV is new Ada.Containers.Vectors(Index_Type=>OutputIndex, Element_Type=>Connection_Index);
---     package WV is new Ada.Containers.Vectors(Index_Type=>InputIndex_Base, Element_Type=>Real);
---
---     type Neuron is new PCNV.Connector_Vector and Neuron_Interface with record
---         idx     : Nnet_NeuronId; -- own index in NNet
---         activat : Activation_Type;
---         lag     : Real;    -- delay of result propagation, unused for now
---         inputs  : IV.Vector;
---         outputs : OV.Vector;
---         weights : WV.Vector;
---     end record;
+    use type Connection_Index;
+    package IV is new Ada.Containers.Vectors(Index_Type=>InputIndex,  Element_Type=>Connection_Index);
+    package OV is new Ada.Containers.Vectors(Index_Type=>OutputIndex, Element_Type=>Connection_Index);
+    package WV is new Ada.Containers.Vectors(Index_Type=>InputIndex_Base, Element_Type=>Real);
 
-        type Neuron is new Neuron_Interface with null record;
+--     type Neuron is new PCNV.Connector_Vector and Neuron_Interface with record
+    type Neuron is new Neuron_Interface with record
+        idx     : NeuronId; -- own index in NNet
+        activat : Activation_Type;
+        lag     : Real;    -- delay of result propagation, unused for now
+        inputs  : IV.Vector;
+        --outputs : OV.Vector; -- inherited from connectors
+        weights : WV.Vector;
+    end record;
+
 
 end dynn.neurons.vectors;

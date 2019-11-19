@@ -81,15 +81,15 @@ package body dynn.neurons.vectors is
 --     end Del_Input;
 --
 --
---     ------------------
---     -- Inputs handling
---     --
---     overriding
---     function NInputs (neur : Neuron) return InputIndex is
---     begin
---         return InputIndex_Base(neur.inputs.Length);
---     end NInputs;
---
+    ------------------
+    -- Inputs handling
+    --
+    overriding
+    function NInputs (neur : Neuron) return InputIndex is
+    begin
+        return InputIndex_Base(neur.inputs.Length);
+    end NInputs;
+
 --     overriding
 --     function Input (neur : Neuron; idx : InputIndex) return ConnectionIndex is
 --     begin
