@@ -28,8 +28,8 @@ package dynn.neurons.vectors is
     ---------------
     -- constructors
     --
-    not overriding
-    function Create(NR : NeuronRec) return Neuron;
+--     not overriding
+--     function Create(NR : NeuronRec) return Neuron;
 
     not overriding
     function Create(activation : Activation_Type;
@@ -59,5 +59,7 @@ private
 --         outputs : OV.Vector;
 --         weights : WV.Vector;
 --     end record;
+
+        type Neuron is new Neuron_Interface with null record;
 
 end dynn.neurons.vectors;

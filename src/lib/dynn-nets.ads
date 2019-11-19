@@ -107,7 +107,7 @@ package dynn.nets is
     -- Forward and backward sort will produce different layering if cycles are present
     -- (which is a major modus operandi of this lib).
 
-    procedure Update_Layers (net : in out NNet_Interface'Class; idx : NNet_NeuronId); -- needs extra param: add/del op selector
+    procedure Update_Layers (net : in out NNet_Interface'Class; idx : NeuronId); -- needs extra param: add/del op selector
     -- called upon insertion/deletion of a neuron to update pre-sroted layers
     -- if Autosort_Layers = True.
     -- Updates layers starting from the inserted neuron, following its connections.
@@ -137,7 +137,7 @@ private
 
 
     -- utility primitives and class-wide methods
-    function Get_Free_NeuronId(net : NNet_Interface'Class) return NNet_NeuronId; -- might need to be abstract primitive
+    function Get_Free_NeuronId(net : NNet_Interface'Class) return NeuronId; -- might need to be abstract primitive
 
 end dynn.nets;
 

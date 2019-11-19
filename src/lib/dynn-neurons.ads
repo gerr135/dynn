@@ -22,18 +22,28 @@
 generic
 package dynn.neurons is
 
---     -------------------------------------
---     --  Local input/output indices
---     type    InputIndex_Base is new Natural;
---     subtype InputIndex  is InputIndex_Base  range 1 .. InputIndex_Base'Last;
---     type    OutputIndex_Base is new Natural;
---     subtype OutputIndex is OutputIndex_Base range 1 .. OutputIndex_Base'Last;
---
--- --     -- associated arrray types for holding params
---     type Input_Connection_Array  is array (InputIndex  range <>) of ConnectionIndex;
---     type Output_Connection_Array is array (OutputIndex range <>) of ConnectionIndex;
---     type Weight_Array  is array (InputIndex_Base range <>) of Real;
--- --     type Value_Array   is array (InputIndex range <>) of Real;
+    -------------------------------------
+    --  Local input/output indices
+    --
+    -- For easy construction of neurons in descriptive parts, we provide an input index.
+    -- Then, new neuron can be constructed as simply as:
+    --   neur : Neuron := Create(activation  => Sigmoid,
+    --                           connections => ((I,+1),(I,+2)), ...);
+    --
+    -- On outputs: normally neuron has a single outut, but multiple other entities can
+    -- be connected to that (single) output.
+    -- So, we provide OutputIndex here to track who takes signals from our neuron..
+    --
+    type    InputIndex_Base is new Natural;
+    subtype InputIndex  is InputIndex_Base  range 1 .. InputIndex_Base'Last;
+    type    OutputIndex_Base is new Natural;
+    subtype OutputIndex is OutputIndex_Base range 1 .. OutputIndex_Base'Last;
+
+    -- associated arrray types for holding params
+    type Input_Connection_Array  is array (InputIndex  range <>) of Connection_Index;
+    type Output_Connection_Array is array (OutputIndex range <>) of Connection_Index;
+    type Weight_Array  is array (InputIndex_Base range <>) of Real;
+--     type Value_Array   is array (InputIndex range <>) of Real;
 --     -- this one is not very useful, as it should be the state of the entire NNet that is propagated.
 --     -- This can be done on per-neuron basis (albeit much less efficiently than per-layer),
 --     -- but that would use the NNet value arrays, as defined in nnet_types.ads
@@ -47,7 +57,7 @@ package dynn.neurons is
     --
     -- like Input_Interface, is based on Connector_Interface, as output handling code is the same
 --     package PCN is new Connectors(Index_Base      => OutputIndex_Base,
---                                   Connection_Type => ConnectionIndex,
+--                                   Connection_Type => Connection_Index,
 --                                   No_Connection   => No_Connection );
 
 --     type Neuron_Interface is interface and PCN.Connector_Interface;
