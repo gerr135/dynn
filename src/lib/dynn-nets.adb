@@ -85,21 +85,9 @@ package body dynn.nets is
             end loop;
         else
             Put_Line(F, "unsorted layers;  neur# |i1, i2.. |o1, o2.. ;");
-            -- we print stuff straight
-            for n in 1 .. net.NNeurons loop
-                Put("  ");
-                Put(F, Integer(net.Neuron(n).Index), 2);
-                Put(" |");
-                for input of net.Neuron(n).Inputs loop
-                    -- inefficient, better be redone through indexed loop and individual .Input calls
-                    Put(F, NN.Con2Str(input) & " ");
-                end loop;
-                Put(F,"|");
-                for output of net.Neuron(n).Outputs loop
-                    -- see above note in Inputs loop for why .Outputs is yet unimplemented
-                    Put(F, NN.Con2Str(output) & " ");
-                end loop;
-                Put_Line(F,";");
+            -- we just print neuron by neuron
+            for neur of net.Neurons loop
+                neur.Print_Structure(F);
             end loop;
             New_Line(F);
         end if;

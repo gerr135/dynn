@@ -28,6 +28,9 @@ package dynn.neurons.vectors is
     overriding
     function NInputs (neur : Neuron) return InputIndex ;
 
+    overriding
+    function Id (neur : Neuron) return NeuronId;
+
     ---------------
     -- constructors
     --
@@ -56,7 +59,7 @@ private
 
 --     type Neuron is new PCNV.Connector_Vector and Neuron_Interface with record
     type Neuron is new Neuron_Interface with record
-        idx     : NeuronId; -- own index in NNet
+        id     : NeuronId; -- own index in NNet
         activat : Activation_Type;
         lag     : Real;    -- delay of result propagation, unused for now
         inputs  : IV.Vector;

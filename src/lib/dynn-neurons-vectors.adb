@@ -96,6 +96,13 @@ package body dynn.neurons.vectors is
 --         return neur.inputs.Element(idx);
 --     end Input;
 
+
+    overriding
+    function Id (neur : Neuron) return NeuronId is
+    begin
+        return neur.id;
+    end;
+
     ------------
     -- Create --
     ------------
@@ -124,7 +131,7 @@ package body dynn.neurons.vectors is
     is
         neur : Neuron;
     begin
-        neur.idx := +0;
+        neur.id := +0;
         neur.activat := activation;
         neur.lag := 0.0;
         -- populate inputs and weights vectors
@@ -146,7 +153,7 @@ package body dynn.neurons.vectors is
         G : Ada.Numerics.Float_Random.Generator;
         use Ada.Numerics.Float_Random;
     begin
-        neur.idx := +0;
+        neur.id := +0;
         neur.activat := activation;
         neur.lag := 0.0;
         -- populate inputs and weights vectors

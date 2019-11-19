@@ -17,6 +17,8 @@
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+with Ada.Text_IO;
+
 -- with connectors;
 
 generic
@@ -69,10 +71,14 @@ package dynn.neurons is
 
     -- primitives
     function NInputs (neur : Neuron_Interface) return InputIndex  is abstract;
+    function Id (neur : Neuron_Interface) return NeuronId  is abstract;
 
 
     --------------------------------------------
     -- Utility (class-wide)
+    procedure Print_Structure(neur : Neuron_Interface'Class;
+                              F : Ada.Text_IO.File_Type := Ada.Text_IO.Standard_Output);
+
     function Prop_Forward (neur : Neuron_Interface'Class; data  : Value_Array) return Real;
 
 private
