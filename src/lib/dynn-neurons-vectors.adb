@@ -107,6 +107,9 @@ package body dynn.neurons.vectors is
         neur.lag := 0.0;
         -- populate inputs and weights vectors
         for i in connections'Range loop
+            -- ILV.List(neur.Inputs.Data.all).Append(connections(i));
+            -- above variant triggers "discriminant check failed" upon execution
+            --
             neur.my_inputs.Append(connections(i));
         end loop;
         -- generate random weights
