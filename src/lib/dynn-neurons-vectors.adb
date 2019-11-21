@@ -69,7 +69,7 @@ package body dynn.neurons.vectors is
             ILV.List(neur.Inputs.Data.all).Append(connections(i));
         end loop;
         for w in weights'Range loop
-            neur.my_weights.Append(weights(w));
+            WLV.List(neur.Weights.Data.all).Append(weights(w));
         end loop;
         return neur;
     end Create;
