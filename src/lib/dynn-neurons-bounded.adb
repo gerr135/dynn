@@ -85,14 +85,17 @@ package body dynn.neurons.bounded is
         if maxNi < connections'Length then
             raise Constraint_Error with "too many inputs at bounded neuron creation";
         end if;
+        --
         neur.id := +0;
         neur.activat := activation;
         -- populate inputs and weights
         for i in connections'Range loop
-            neur.my_inputs(i) := connections(i);
+            -- NOTE: direct use of neur.my_inputs triggers gnat bug!!
+            ILB.List(neur.Inputs.Data.all)(i) := connections(i);
         end loop;
         for w in weights'Range loop
-            WLV.List(neur.Weights.Data.all).Append(weights(w));
+            WLB.List(neur.Weights.Data.all)(w) := weights(w);
+            neur.bias := weights(0);
         end loop;
         return neur;
     end Create;
@@ -103,21 +106,27 @@ package body dynn.neurons.bounded is
                     connections : Input_Connection_Array;
                     maxWeight : Real) return Neuron
     is
-        neur : Neuron;
+        neur : Neuron (maxNi, maxNo);
         G : Ada.Numerics.Float_Random.Generator;
         use Ada.Numerics.Float_Random;
     begin
+        -- first some checks
+        if maxNi < connections'Length then
+            raise Constraint_Error with "too many inputs at bounded neuron creation";
+        end if;
+        --
         neur.id := +0;
         neur.activat := activation;
-        neur.lag := 0.0;
         -- populate inputs and weights
         for i in connections'Range loop
-            neur.my_inputs.Append(connections(i));
+            -- NOTE: direct use of neur.my_inputs triggers gnat bug!!
+            Ada.Text_IO.Put_Line("  Create, i=" & i'Img);
+            ILB.List(neur.Inputs.Data.all)(i) := connections(i);
         end loop;
         -- generate random weights
         Reset(G);
         for w in 0 .. connections'Last loop
-            neur.my_weights.Append(Real(Random(G)) * maxWeight);
+            WLB.List(neur.Weights.Data.all)(w) := Real(Random(G)) * maxWeight;
         end loop;
         return neur;
     end Create;

@@ -23,28 +23,22 @@ procedure tst_neurons is
     package PNB is new PN.bounded;
 
     use PD;
---     use NNN;
 
 begin  -- main
-    Put_Line("creating neurons");
+    Put_Line("creating vector neurons");
     declare
         neur : PNV.Neuron := PNV.Create(Sigmoid, ((I,+1),(I,+2)), maxWeight => 1.0);
     begin
-        Put_Line("added neuron 1 and connected to output 1");
+        Put_Line("neuron 1:");
         neur.Print_Structure;
     end;
     --
---     New_Line;
---     Put_Line("creating 2-neuron network");
---     declare
---         neur1 : PNV.Neuron := PNV.Create(Sigmoid, ((I,+1),(I,+2)), maxWeight => 1.0);
---         neur2 : PNV.Neuron := PNV.Create(Sigmoid, ((I,+1),(I,+2)), maxWeight => 1.0);
---         net   : PNetV.NNet := PNetV.Create(Ni=>2, No=>2);
---     begin
---         net.Add_Neuron(neur1);
---         net.Set_Output(+1,(N,+1));
---         net.Add_Neuron(neur2);
---         net.Set_Output(+2,(N,+2));
---         net.Print_Structure;
---     end;
+    New_Line;
+    Put_Line("creating bounded neurons");
+    declare
+        neur : PNB.Neuron := PNB.Create(2, 2, Sigmoid, ((I,+1),(I,+2)), maxWeight => 1.0);
+    begin
+        Put_Line("neuron 1:");
+        neur.Print_Structure;
+    end;
 end tst_neurons;
