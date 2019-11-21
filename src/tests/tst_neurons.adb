@@ -10,8 +10,8 @@
 with Ada.Text_IO, Ada.Integer_Text_IO;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
--- with dynn.nets.vectors;
 with dynn.neurons.vectors;
+with dynn.neurons.bounded;
 
 procedure tst_neurons is
 
@@ -20,6 +20,7 @@ procedure tst_neurons is
     package PD is new dynn(Real => Float);
     package PN is new PD.neurons;
     package PNV is new PN.vectors;
+    package PNB is new PN.bounded;
 
     use PD;
 --     use NNN;
