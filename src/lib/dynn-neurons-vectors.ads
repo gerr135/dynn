@@ -17,9 +17,6 @@
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-with Ada.Containers.Vectors;
--- with connectors.vectors;
-
 with lists.vectors;
 
 generic

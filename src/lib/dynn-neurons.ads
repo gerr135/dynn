@@ -20,7 +20,6 @@
 with Ada.Text_IO;
 
 with Lists;
--- with connectors;
 
 generic
 package dynn.neurons is
