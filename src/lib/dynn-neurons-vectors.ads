@@ -31,13 +31,13 @@ package dynn.neurons.vectors is
     function Id (neur : Neuron) return NeuronId;
 
     overriding
-    function Inputs  (neur : Neuron) return Input_Reference_Type;
+    function Inputs  (neur : in out Neuron) return Input_Reference_Type;
 
     overriding
-    function Outputs (neur : Neuron) return OL.List_Interface'Class;
+    function Outputs (neur : in out Neuron) return Output_Reference_Type;
 
     overriding
-    function Weights (neur : Neuron) return WL.List_Interface'Class;
+    function Weights (neur : in out Neuron) return Weight_Reference_Type;
 
     ---------------
     -- constructors
@@ -71,8 +71,8 @@ private
         activat : Activation_Type;
         lag     : Real;    -- delay of result propagation, unused for now
         my_inputs  : aliased ILV.List;
-        my_outputs : OLV.List;
-        my_weights : WLV.List;
+        my_outputs : aliased OLV.List;
+        my_weights : aliased WLV.List;
     end record;
 
 

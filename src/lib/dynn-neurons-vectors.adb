@@ -12,7 +12,7 @@ package body dynn.neurons.vectors is
 
 
     overriding
-    function Inputs  (neur : Neuron) return Input_Reference_Type is
+    function Inputs  (neur : in out Neuron) return Input_Reference_Type is
         IR : not null access IL.List_Interface'Class := neur.my_inputs'Access;
         R : Input_Reference_Type(IR);
     begin
@@ -20,15 +20,17 @@ package body dynn.neurons.vectors is
     end;
 
     overriding
-    function Outputs (neur : Neuron) return OL.List_Interface'Class is
+    function Outputs (neur : in out Neuron) return Output_Reference_Type is
+        R : Output_Reference_Type(neur.my_outputs'Access);
     begin
-        return neur.my_outputs;
+        return R;
     end;
 
     overriding
-    function Weights (neur : Neuron) return WL.List_Interface'Class is
+    function Weights (neur : in out Neuron) return Weight_Reference_Type is
+        R : Weight_Reference_Type(neur.my_weights'Access);
     begin
-        return neur.my_weights;
+        return R;
     end;
 
     ------------
@@ -64,7 +66,7 @@ package body dynn.neurons.vectors is
         neur.lag := 0.0;
         -- populate inputs and weights vectors
         for i in connections'Range loop
-            neur.my_inputs.Append(connections(i));
+            ILV.List(neur.Inputs.Data.all).Append(connections(i));
         end loop;
         for w in weights'Range loop
             neur.my_weights.Append(weights(w));
