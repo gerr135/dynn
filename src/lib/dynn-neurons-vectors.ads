@@ -20,16 +20,24 @@
 with Ada.Containers.Vectors;
 -- with connectors.vectors;
 
+with lists.vectors;
+
 generic
 package dynn.neurons.vectors is
 
     type Neuron is new Neuron_Interface with private;
 
     overriding
-    function NInputs (neur : Neuron) return InputIndex ;
+    function Id (neur : Neuron) return NeuronId;
 
     overriding
-    function Id (neur : Neuron) return NeuronId;
+    function Inputs  (neur : Neuron) return IL.List_Interface'Class;
+
+    overriding
+    function Outputs (neur : Neuron) return OL.List_Interface'Class;
+
+    overriding
+    function Weights (neur : Neuron) return WL.List_Interface'Class;
 
     ---------------
     -- constructors
@@ -52,19 +60,19 @@ package dynn.neurons.vectors is
 private
 
     -- needed vector types
-    use type Connection_Index;
-    package IV is new Ada.Containers.Vectors(Index_Type=>InputIndex,  Element_Type=>Connection_Index);
-    package OV is new Ada.Containers.Vectors(Index_Type=>OutputIndex, Element_Type=>Connection_Index);
-    package WV is new Ada.Containers.Vectors(Index_Type=>InputIndex_Base, Element_Type=>Real);
+--     use type Connection_Index;
+    package ILV is new IL.Vectors;
+    package OLV is new OL.Vectors;
+    package WLV is new WL.Vectors;
 
 --     type Neuron is new PCNV.Connector_Vector and Neuron_Interface with record
     type Neuron is new Neuron_Interface with record
         id     : NeuronId; -- own index in NNet
         activat : Activation_Type;
         lag     : Real;    -- delay of result propagation, unused for now
-        inputs  : IV.Vector;
-        --outputs : OV.Vector; -- inherited from connectors
-        weights : WV.Vector;
+        my_inputs  : ILV.List;
+        my_outputs : OLV.List;
+        my_weights : WLV.List;
     end record;
 
 

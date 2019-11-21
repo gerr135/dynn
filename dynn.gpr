@@ -1,4 +1,7 @@
 with "gnatcoll.gpr"; -- needs libgpr installed to build properly
+with "/home/gerr/comp/kdevel/ada/ada_composition/ada_lists/ada_lists.gpr";  -- change this!
+-- above hsould point to ither absolute path of the gpr file,
+-- or relative to the system-wide root for Ada libs, if such is maintained..
 
 project dynn is
     -- supports debug (default) or release modes
@@ -23,9 +26,9 @@ project dynn is
     package Compiler is
         case Mode is
             when "dbg" =>
-            for Switches ("Ada") use ("-g", "-gnatf");
+                for Switches ("Ada") use ("-g", "-gnatf");
             when "release" =>
-            for Switches ("Ada") use ("-O2");
+                for Switches ("Ada") use ("-O2");
         end case;
     end Compiler;
 

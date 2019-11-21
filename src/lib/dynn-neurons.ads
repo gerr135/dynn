@@ -19,6 +19,7 @@
 
 with Ada.Text_IO;
 
+with Lists;
 -- with connectors;
 
 generic
@@ -51,6 +52,11 @@ package dynn.neurons is
 --     -- but that would use the NNet value arrays, as defined in nnet_types.ads
 --     -- Keeping these local types commented for now. To be removed later.
 
+    -- vector-like lists of inputs/outputs (indexable and iterable)
+    package IL is new Lists(Index_Base=>InputIndex_Base,  Element_Type=>Connection_Index);
+    package OL is new Lists(Index_Base=>OutputIndex_Base, Element_Type=>Connection_Index);
+    package WL is new Lists(Index_Base=>InputIndex_Base,  Element_Type=>Real);
+
 
 
     ----------------------------------------------
@@ -70,8 +76,11 @@ package dynn.neurons is
         with Implicit_Dereference => Data;
 
     -- primitives
-    function NInputs (neur : Neuron_Interface) return InputIndex  is abstract;
     function Id (neur : Neuron_Interface) return NeuronId  is abstract;
+
+    function Inputs  (neur : Neuron_Interface) return IL.List_Interface'Class is abstract;
+    function Outputs (neur : Neuron_Interface) return OL.List_Interface'Class is abstract;
+    function Weights (neur : Neuron_Interface) return WL.List_Interface'Class is abstract;
 
 
     --------------------------------------------
@@ -84,6 +93,8 @@ package dynn.neurons is
 private
 
     type Neuron_Reference (Data : not null access Neuron_Interface'Class) is null record;
+
+--     package WV is new Lists(Index_Base=>InputIndex_Base,  Element_Type=>Real);
 
 --     type NeuronRepr(Ni : InputIndex_Base; No : OutputIndex_Base) is record
 --         idx     : NNet_NeuronId; -- own index in NNet

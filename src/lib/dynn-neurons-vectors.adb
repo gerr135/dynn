@@ -4,103 +4,29 @@ with Ada.Numerics.Float_Random;
 
 package body dynn.neurons.vectors is
 
---     ----------------
---     -- To/FromRec --
---     --
---     overriding
---     function ToRepr (neur : Neuron) return NeuronRepr is
---         NR : NeuronRepr(Ni => InputIndex_Base (neur.inputs.Length),
---                         No => OutputIndex_Base(neur.outputs.Length));
---     begin
---         NR.idx     := neur.idx;
---         NR.activat := neur.activat;
---         NR.lag     := neur.lag;
---         -- assign inputs/weights - this is the most inefficient part,
---         -- but should only be used on construction/topology change.
---         NR.weights(0) := neur.weights(0);
---         for i in 1 .. NR.Ni loop
---             NR.weights(i) := neur.weights(i);
---             NR.inputs(i)  := neur.inputs(i);
---         end loop;
---         for o in 1 .. NR.No loop
---             NR.outputs(o)  := neur.outputs(o);
---         end loop;
---         --
---         return NR;
---     end ToRepr;
---
---     overriding
---     procedure FromRepr (neur : in out Neuron; NR : NeuronRepr) is
---     begin
---         neur.idx     := NR.idx;
---         neur.activat := NR.activat;
---         neur.lag     := NR.lag;
---         -- assign inputs/weights
---         neur.weights(0) := NR.weights(0);
---         for i in 1 .. NR.Ni loop
---             neur.weights(i) := NR.weights(i);
---             neur.inputs(i)  := NR.inputs(i);
---         end loop;
---         for o in 1 .. NR.No loop
---             neur.outputs(o)  := NR.outputs(o);
---         end loop;
---         --
---     end FromRepr;
---
---     ----------------------------
---     -- Add/Del inputs and output
---     --
---     --  NOTE: these are Neuron primitives, only operate on this individual neuron
---     --  other side of connections is updated by the enclosing NNet
---     overriding
---     procedure Add_Input (neur : in out Neuron; Input : ConnectionIndex) is
---     begin
---         for i of neur.inputs loop
---             -- ensure that passed connection is not a duplicate
---             if i = Input then
---                 raise PCN.Duplicate_Connection;
---             end if;
---         end loop;
---         neur.inputs.Append(Input);
---     end Add_Input;
---
---     overriding
---     procedure Del_Input (neur : in out Neuron; Input : ConnectionIndex) is
---         -- same logic as in connectors.vectors
---     begin
---         -- search for the connection
---         for i in 1 .. InputIndex(neur.inputs.Length) loop
---             -- ensure that passed connection is not a duplicate
---             if neur.inputs(i) = Input then
---                 neur.inputs.Delete(i);
---                 return;
---             end if;
---         end loop;
---         -- if we got here, connection was not found
---         raise PCN.Connection_Not_Found;
---     end Del_Input;
---
---
-    ------------------
-    -- Inputs handling
-    --
-    overriding
-    function NInputs (neur : Neuron) return InputIndex is
-    begin
-        return InputIndex_Base(neur.inputs.Length);
-    end NInputs;
-
---     overriding
---     function Input (neur : Neuron; idx : InputIndex) return ConnectionIndex is
---     begin
---         return neur.inputs.Element(idx);
---     end Input;
-
-
     overriding
     function Id (neur : Neuron) return NeuronId is
     begin
         return neur.id;
+    end;
+
+
+    overriding
+    function Inputs  (neur : Neuron) return IL.List_Interface'Class is
+    begin
+        return neur.my_inputs;
+    end;
+
+    overriding
+    function Outputs (neur : Neuron) return OL.List_Interface'Class is
+    begin
+        return neur.my_outputs;
+    end;
+
+    overriding
+    function Weights (neur : Neuron) return WL.List_Interface'Class is
+    begin
+        return neur.my_weights;
     end;
 
     ------------
@@ -162,7 +88,7 @@ package body dynn.neurons.vectors is
         end loop;
         -- generate random weights
         Reset(G);
-        for w in 0 .. neur.NInputs loop
+        for w in 0 .. connections'Last loop
             neur.weights.Append(Real(Random(G)) * maxWeight);
         end loop;
         return neur;
