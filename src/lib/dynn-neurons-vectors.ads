@@ -39,6 +39,16 @@ package dynn.neurons.vectors is
     overriding
     function Weights (neur : in out Neuron) return Weight_Reference_Type;
 
+
+    overriding
+    function Inputs  (neur : Neuron) return IL.List_Interface'Class;
+
+    overriding
+    function Outputs  (neur : Neuron) return OL.List_Interface'Class;
+
+    overriding
+    function Weights (neur : Neuron) return WL.List_Interface'Class;
+
     ---------------
     -- constructors
     --

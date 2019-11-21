@@ -86,9 +86,16 @@ package dynn.neurons is
     -- primitives
     function Id (neur : Neuron_Interface) return NeuronId  is abstract;
 
+    -- access to logical fields, following common interface
+    --  by reference (can use with in out Neurons)
     function Inputs  (neur : in out Neuron_Interface) return Input_Reference_Type  is abstract;
     function Outputs (neur : in out Neuron_Interface) return Output_Reference_Type is abstract;
     function Weights (neur : in out Neuron_Interface) return Weight_Reference_Type is abstract;
+    --
+    --  immutable (for use with in params)
+    function Inputs  (neur : Neuron_Interface) return IL.List_Interface'Class  is abstract;
+    function Outputs (neur : Neuron_Interface) return OL.List_Interface'Class  is abstract;
+    function Weights (neur : Neuron_Interface) return WL.List_Interface'Class  is abstract;
 
 
     --------------------------------------------

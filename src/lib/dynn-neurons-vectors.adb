@@ -33,6 +33,25 @@ package body dynn.neurons.vectors is
         return R;
     end;
 
+
+    overriding
+    function Inputs  (neur : Neuron) return IL.List_Interface'Class is
+    begin
+        return neur.my_inputs;
+    end;
+
+    overriding
+    function Outputs (neur : Neuron) return OL.List_Interface'Class is
+    begin
+        return neur.my_outputs;
+    end;
+
+    overriding
+    function Weights (neur : Neuron) return WL.List_Interface'Class is
+    begin
+        return neur.my_weights;
+    end;
+
     ------------
     -- Create --
     ------------
