@@ -1,5 +1,5 @@
 with "gnatcoll.gpr"; -- needs libgpr installed to build properly
-with "/home/gerr/comp/kdevel/ada/ada_composition/ada_lists/ada_lists.gpr";  -- change this!
+with "../../ada/ada_composition/ada_lists/ada_lists.gpr";  -- change this!
 -- above hsould point to ither absolute path of the gpr file,
 -- or relative to the system-wide root for Ada libs, if such is maintained..
 
