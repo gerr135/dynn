@@ -12,9 +12,11 @@ package body dynn.neurons.vectors is
 
 
     overriding
-    function Inputs  (neur : Neuron) return IL.List_Interface'Class is
+    function Inputs  (neur : Neuron) return Input_Reference_Type is
+        IR : not null access IL.List_Interface'Class := neur.my_inputs'Access;
+        R : Input_Reference_Type(IR);
     begin
-        return neur.my_inputs;
+        return R;
     end;
 
     overriding
@@ -62,10 +64,10 @@ package body dynn.neurons.vectors is
         neur.lag := 0.0;
         -- populate inputs and weights vectors
         for i in connections'Range loop
-            neur.inputs.Append(connections(i));
+            neur.my_inputs.Append(connections(i));
         end loop;
         for w in weights'Range loop
-            neur.weights.Append(weights(w));
+            neur.my_weights.Append(weights(w));
         end loop;
         return neur;
     end Create;
@@ -84,12 +86,12 @@ package body dynn.neurons.vectors is
         neur.lag := 0.0;
         -- populate inputs and weights vectors
         for i in connections'Range loop
-            neur.inputs.Append(connections(i));
+            neur.my_inputs.Append(connections(i));
         end loop;
         -- generate random weights
         Reset(G);
         for w in 0 .. connections'Last loop
-            neur.weights.Append(Real(Random(G)) * maxWeight);
+            neur.my_weights.Append(Real(Random(G)) * maxWeight);
         end loop;
         return neur;
     end Create;

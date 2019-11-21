@@ -57,6 +57,8 @@ package dynn.neurons is
     package OL is new Lists(Index_Base=>OutputIndex_Base, Element_Type=>Connection_Index);
     package WL is new Lists(Index_Base=>InputIndex_Base,  Element_Type=>Real);
 
+    type Input_Reference_Type (Data : not null access IL.List_Interface'Class) is null record
+        with Implicit_Dereference => Data;
 
 
     ----------------------------------------------
@@ -78,7 +80,7 @@ package dynn.neurons is
     -- primitives
     function Id (neur : Neuron_Interface) return NeuronId  is abstract;
 
-    function Inputs  (neur : Neuron_Interface) return IL.List_Interface'Class is abstract;
+    function Inputs  (neur : Neuron_Interface) return Input_Reference_Type is abstract;
     function Outputs (neur : Neuron_Interface) return OL.List_Interface'Class is abstract;
     function Weights (neur : Neuron_Interface) return WL.List_Interface'Class is abstract;
 

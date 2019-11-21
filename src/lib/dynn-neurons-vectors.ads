@@ -31,7 +31,7 @@ package dynn.neurons.vectors is
     function Id (neur : Neuron) return NeuronId;
 
     overriding
-    function Inputs  (neur : Neuron) return IL.List_Interface'Class;
+    function Inputs  (neur : Neuron) return Input_Reference_Type;
 
     overriding
     function Outputs (neur : Neuron) return OL.List_Interface'Class;
@@ -70,7 +70,7 @@ private
         id     : NeuronId; -- own index in NNet
         activat : Activation_Type;
         lag     : Real;    -- delay of result propagation, unused for now
-        my_inputs  : ILV.List;
+        my_inputs  : aliased ILV.List;
         my_outputs : OLV.List;
         my_weights : WLV.List;
     end record;
